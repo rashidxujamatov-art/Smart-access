@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Android ilova — Smart Access</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.m{width:390px;height:844px;display:flex;flex-direction:column;background:#F3F5F8;color:#172337;font-family:Inter,system-ui,sans-serif;font-size:14px;position:relative;overflow:hidden}
+.m button,.m input{font-family:inherit;font-size:13px;color:inherit}
+.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:#fff;border:1px solid #DDE3EA;border-radius:10px;padding:14px}
+.bd{display:inline-flex;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.b-ok{background:#DCFCE7;color:#166534}.b-warn{background:#FEF3C7;color:#92400E}.b-danger{background:#FEE2E2;color:#991B1B}.b-info{background:#DBEAFE;color:#1E40AF}.b-neutral{background:#E8ECF1;color:#334155}
+.tab{flex:1;min-height:58px;border:0;background:transparent;color:#566275;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:600;cursor:pointer;font-size:11px}
+.tab.on{color:#2563EB}
+.sq{flex:1;aspect-ratio:1/1;background:#795548;color:#fff;border:3px solid transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;letter-spacing:.05em;cursor:pointer}
+.sq .i{width:48px;height:48px;stroke-width:1.6}
+.sq.on{border-color:#fff;box-shadow:0 0 0 4px #2563EB}
+.cam{position:relative;display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:8px;overflow:hidden;color:#fff;padding:0;cursor:pointer;text-align:left}
+.pl{position:absolute;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.inp{height:48px;width:100%;border:1px solid #DDE3EA;border-radius:8px;padding:0 12px;background:#fff}
+.lbl{display:block;font-size:12px;font-weight:600;color:#566275;margin-bottom:6px}
+.btn{min-height:48px;border-radius:8px;border:1px solid #DDE3EA;background:#fff;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;cursor:pointer}
+.btn.pri{background:#2563EB;border-color:#2563EB;color:#fff}
+.chip{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #DDE3EA;background:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+.chip.on{background:#334155;border-color:#334155;color:#fff}
+.row{display:flex;align-items:center;gap:10px}
+.mut{font-size:12px;color:#566275}
+.qa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:76px;border-radius:10px;border:1px solid #DDE3EA;background:#fff;font-weight:600;cursor:pointer;font-size:12px}
+.av{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex:none}
+.ctl{width:44px;height:44px;border-radius:8px;border:1px solid #475569;background:#1E293B;color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+</style>
+</helmet>
+<div class="m">
+
+ <sc-if value="{{t.login}}" hint-placeholder-val="{{true}}">
+  <div style="flex:1;display:flex;flex-direction:column;background:#172337">
+   <div style="padding:56px 24px 28px;color:#fff;display:flex;flex-direction:column;gap:10px">
+    <svg class="i" style="width:44px;height:44px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shield}}"/></svg>
+    <div style="font-family:'Space Grotesk';font-size:26px;font-weight:700">SMART ACCESS</div>
+    <div style="color:#B8C4D6">Kirish-chiqish nazorati va videokuzatuv</div>
+   </div>
+   <form style="flex:1;background:#F3F5F8;border-radius:20px 20px 0 0;padding:24px;display:flex;flex-direction:column;gap:14px" onSubmit="{{go.login}}">
+    <b style="font-size:18px">Tizimga kirish</b>
+    <div><label class="lbl" for="mc">Korxona identifikatori</label><input id="mc" class="inp" placeholder="KORXONA-001"></div>
+    <div><label class="lbl" for="ml">Login</label><input id="ml" class="inp" placeholder="admin" autocomplete="off"></div>
+    <div><label class="lbl" for="mp">Parol</label><div class="row" style="gap:8px"><input id="mp" class="inp" type="{{passType}}" placeholder="••••••"><button type="button" class="btn" style="width:48px;padding:0" aria-label="Parolni ko'rsatish" onClick="{{go.showPass}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.eye}}"/></svg></button></div></div>
+    <label class="row" style="gap:8px"><input type="checkbox" checked="{{remember}}" onChange="{{go.remember}}"> Eslab qolish</label>
+    <button type="submit" class="btn pri">Kirish</button>
+    <div class="mut">Login va parolni administrator beradi. Ikki bosqichli tasdiqlash yoqilgan bo'lsa, SMS kod so'raladi.</div>
+    <div class="mut" style="margin-top:auto;text-align:center">Android · v1.0 · demo</div>
+   </form>
+  </div>
+ </sc-if>
+
+ <sc-if value="{{t.app}}" hint-placeholder-val="{{false}}">
+ <div style="background:#172337;color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px;min-height:60px">
+  <sc-if value="{{t.sub}}" hint-placeholder-val="{{false}}"><button class="ctl" style="border-color:#2D3E58;background:transparent" aria-label="Orqaga" onClick="{{go.back}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button></sc-if>
+  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:16px">{{title}}</div><div style="font-size:12px;color:#B8C4D6">Administrator · 1-darvoza</div></div>
+  <span class="bd b-ok">Onlayn</span>
+  <button class="ctl" style="border-color:#2D3E58;background:transparent" aria-label="Profil" onClick="{{go.profile}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.user}}"/></svg></button>
+ </div>
+ <div style="flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px">
+
+  <sc-if value="{{t.home}}" hint-placeholder-val="{{false}}">
+   <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4"><div class="cd" style="padding:12px"><div class="mut" style="font-weight:600">{{k.l}}</div><div style="font-family:'Space Grotesk';font-size:28px;font-weight:700">{{k.v}}</div><span class="bd b-{{k.k}}">{{k.s}}</span></div></sc-for>
+   </div>
+   <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+    <button class="qa" onClick="{{go.att}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.clock}}"/></svg>Davomat</button>
+    <button class="qa" onClick="{{go.search}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.search}}"/></svg>Qidiruv</button>
+    <button class="qa" onClick="{{go.player}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.video}}"/></svg>Jonli</button>
+    <button class="qa" onClick="{{go.rep}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.file}}"/></svg>Hisobot</button>
+   </div>
+   <div class="cd row"><div style="flex:1"><div class="mut" style="font-weight:600">1-darvoza shlagbaumi</div><div style="font-weight:700;font-size:16px">{{gateTxt}}</div></div><button class="btn" style="background:#795548;border-color:#795548;color:#fff" onClick="{{go.gate}}">Boshqarish</button></div>
+   <div class="cd" style="display:flex;flex-direction:column;gap:10px"><b>Oxirgi hodisalar</b><sc-for list="{{ev3}}" as="e" hint-placeholder-count="3"><div class="row" style="gap:8px"><span class="bd b-{{e.k}}">{{e.tag}}</span><span style="flex:1">{{e.txt}}</span><span class="mut">{{e.t}}</span></div></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{t.events}}" hint-placeholder-val="{{false}}">
+   <div class="row" style="gap:6px;overflow-x:auto"><sc-for list="{{evChips}}" as="o" hint-placeholder-count="3"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.l}}</button></sc-for></div>
+   <sc-for list="{{events}}" as="e" hint-placeholder-count="6"><div class="cd row" style="align-items:flex-start;padding:12px"><span class="av" style="border-radius:8px;background:#1E293B"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{e.ic}}"/></svg></span><div style="flex:1"><div style="font-weight:600">{{e.txt}}</div><div class="mut">{{e.cam}}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:600">{{e.t}}</div><span class="bd b-{{e.k}}">{{e.tag}}</span></div></div></sc-for>
+  </sc-if>
+
+  <sc-if value="{{t.cams}}" hint-placeholder-val="{{false}}">
+   <div class="mut">Kamerani bosing — jonli ko'rish ochiladi. Ro'yxatdagi kameralar past sifatli oqimda (trafik tejaladi).</div>
+   <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+    <sc-for list="{{cams}}" as="c" hint-placeholder-count="6"><button class="cam" style="{{c.st}}" onClick="{{c.pick}}" aria-label="{{c.name}}"><span class="pl" style="top:6px;left:6px">{{c.name}}</span><span class="pl" style="top:6px;right:6px;background:{{c.lvBg}}">{{c.lv}}</span><span class="pl" style="bottom:6px;right:6px">{{c.q}}</span></button></sc-for>
+   </div>
+  </sc-if>
+
+  <sc-if value="{{t.player}}" hint-placeholder-val="{{false}}">
+   <div class="cam" style="background:linear-gradient(160deg,#243044,#0b111a);cursor:default"><span class="pl" style="top:8px;left:8px">{{selCam.name}}</span><span class="pl" style="top:8px;right:8px;background:{{pmodeBg}}">{{pmode}}</span><span class="pl" style="bottom:8px;left:8px">10.11.2026 {{ptime}}</span><span class="pl" style="bottom:8px;right:8px">DEMO</span><span style="position:absolute;left:38%;top:50%;width:26%;height:16%;border:2px solid #22C55E;border-radius:3px"></span></div>
+   <div class="cd" style="background:#0F1724;border-color:#0F1724;color:#fff;display:flex;flex-direction:column;gap:12px">
+    <div class="row" style="justify-content:space-between">
+     <button class="ctl" aria-label="Orqaga 5 daqiqa" onClick="{{go.pBack}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg></button>
+     <button class="ctl" aria-label="O'ynash yoki pauza" onClick="{{go.pPlay}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{playIc}}"/></svg></button>
+     <button class="ctl" style="background:#DC2626;border-color:#DC2626;width:64px;font-weight:700" onClick="{{go.pLive}}">LIVE</button>
+     <button class="ctl" aria-label="Snapshot" onClick="{{go.snap}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.snap}}"/></svg></button>
+     <button class="ctl" aria-label="To'liq ekran" onClick="{{go.fs}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    </div>
+    <div class="row" style="gap:6px;justify-content:space-between"><sc-for list="{{speeds}}" as="o" hint-placeholder-count="6"><button class="chip" style="min-height:32px;padding:0 8px;{{o.st}}" onClick="{{o.pick}}">{{o.l}}</button></sc-for></div>
+    <div style="position:relative;height:40px">
+     <div style="position:absolute;left:0;right:0;top:14px;height:12px;background:#26354D;border-radius:4px"></div>
+     <div style="position:absolute;left:0;top:14px;height:12px;width:40.4%;background:#16A34A;opacity:.7;border-radius:4px 0 0 4px"></div>
+     <sc-for list="{{marks}}" as="k" hint-placeholder-count="5"><div style="position:absolute;top:6px;width:4px;height:28px;border-radius:2px;background:{{k.c}};left:{{k.l}}%"></div></sc-for>
+     <div style="position:absolute;top:2px;width:2px;height:36px;background:#fff;left:{{ppos}}%"></div>
+     <input type="range" min="0" max="100" step="0.1" value="{{ppos}}" onInput="{{go.seek}}" aria-label="Vaqt chizig'i" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0">
+    </div>
+    <div class="row" style="justify-content:space-between;font-size:11px;color:#B8C4D6"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+   </div>
+   <div class="cd" style="display:flex;flex-direction:column;gap:8px"><b>Shu kameradagi hodisalar</b><sc-for list="{{marks}}" as="k" hint-placeholder-count="5"><button class="row" style="border:0;background:transparent;padding:6px 0;cursor:pointer;text-align:left" onClick="{{k.go}}"><span style="width:10px;height:10px;border-radius:50%;background:{{k.c}}"></span><b>{{k.t}}</b><span style="flex:1">{{k.txt}}</span></button></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{t.gate}}" hint-placeholder-val="{{false}}">
+   <div class="cam" style="background:linear-gradient(160deg,#243044,#0b111a);cursor:default"><span class="pl" style="top:8px;left:8px">Kirish avto · 1-darvoza</span><span class="pl" style="top:8px;right:8px;background:#DC2626">LIVE · DEMO</span></div>
+   <div class="row"><b style="flex:1;font-size:16px">Holat: {{gateTxt}}</b><span class="bd {{fixCls}}">{{fixTxt}}</span></div>
+   <div class="row" style="gap:12px">
+    <button class="sq {{openCls}}" onClick="{{go.askOpen}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h5M5.5 20V10M5.5 12 18.5 3l2 3L5.5 16"/></svg>OCHISH</button>
+    <button class="sq {{closeCls}}" onClick="{{go.askClose}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h5M5.5 20V9M5.5 11h16v4h-16M10 11v4M14.5 11v4M19 11v4"/></svg>YOPISH</button>
+   </div>
+   <div class="cd"><span class="bd b-{{msg.k}}">{{msg.l}}</span><div style="margin-top:6px;font-weight:600">{{msg.t}}</div></div>
+   <div class="row" style="gap:8px"><button class="btn" style="flex:1" onClick="{{go.fixOpen}}">Ochiq holatda fix</button><button class="btn" style="flex:1" onClick="{{go.fixClose}}">Yopiq holatda fix</button></div>
+   <div class="mut">Har bir buyruq tasdiqlanadi va audit logga yoziladi. Demo: haqiqiy rele ulanmagan.</div>
+  </sc-if>
+
+  <sc-if value="{{t.att}}" hint-placeholder-val="{{false}}">
+   <div class="row" style="gap:6px;overflow-x:auto"><sc-for list="{{attChips}}" as="o" hint-placeholder-count="4"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.l}} · {{o.n}}</button></sc-for></div>
+   <div class="mut">Bugun · 10.11.2026 · grace period 10 daqiqa</div>
+   <sc-for list="{{att}}" as="r" hint-placeholder-count="6"><div class="cd row" style="padding:12px"><span class="av" style="background:{{r.col}}">{{r.ini}}</span><div style="flex:1;min-width:0"><b>{{r.n}}</b><div class="mut">Reja {{r.plan}} · kirish {{r.in}}</div></div><span class="bd b-{{r.k}}">{{r.st}}</span></div></sc-for>
+  </sc-if>
+
+  <sc-if value="{{t.search}}" hint-placeholder-val="{{false}}">
+   <div class="row" style="gap:6px"><sc-for list="{{sTabs}}" as="o" hint-placeholder-count="2"><button class="chip {{o.cls}}" style="flex:1" onClick="{{o.pick}}">{{o.l}}</button></sc-for></div>
+   <input class="inp" placeholder="{{sPh}}" value="{{q}}" onInput="{{go.q}}" aria-label="Qidiruv">
+   <sc-if value="{{sEmp}}" hint-placeholder-val="{{true}}">
+    <button class="btn" style="border-style:dashed"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.snap}}"/></svg>Yuz tasviri bilan qidirish (kamera)</button>
+    <sc-for list="{{empRes}}" as="r" hint-placeholder-count="4"><button class="cd row" style="padding:12px;cursor:pointer;text-align:left" onClick="{{r.pick}}"><span class="av" style="background:{{r.col}}">{{r.ini}}</span><span style="flex:1;min-width:0"><b>{{r.n}}</b><br><span class="mut">{{r.lastTxt}}</span></span><span class="bd b-{{r.k}}">{{r.today}}</span></button></sc-for>
+   </sc-if>
+   <sc-if value="{{sCar}}" hint-placeholder-val="{{false}}">
+    <sc-for list="{{carRes}}" as="r" hint-placeholder-count="3"><div class="cd" style="display:flex;flex-direction:column;gap:8px;padding:12px"><div class="row"><span style="display:inline-flex;border:2px solid #172337;border-radius:4px;background:#fff;font-weight:700;padding:1px 8px;letter-spacing:.06em;font-family:'Space Grotesk'">{{r.p}}</span><span class="bd b-{{r.k}}" style="margin-left:auto">{{r.st}}</span></div><div class="mut">{{r.w}} · {{r.d}}</div></div></sc-for>
+    <div class="mut">Ro'yxatda yo'q avtomobil xavfli degani emas — operator tekshiradi.</div>
+   </sc-if>
+  </sc-if>
+
+  <sc-if value="{{t.emp}}" hint-placeholder-val="{{false}}">
+   <div class="cd row" style="align-items:flex-start"><span class="av" style="width:64px;height:64px;font-size:22px;background:{{pe.col}}">{{pe.ini}}</span><div style="flex:1"><b style="font-size:17px">{{pe.n}}</b><div class="mut">{{pe.p}}</div><div style="margin-top:6px"><span class="bd b-{{pe.k}}">{{pe.today}}</span></div></div></div>
+   <sc-if value="{{pe.seen}}" hint-placeholder-val="{{true}}">
+    <div class="cd" style="display:flex;flex-direction:column;gap:8px"><b>Oxirgi aniqlangan joy</b>
+     <div class="row"><span class="mut" style="width:90px">Vaqt</span><b>{{pe.last}}</b></div>
+     <div class="row"><span class="mut" style="width:90px">Kamera</span><b>{{pe.cam}}</b></div>
+     <div class="row"><span class="mut" style="width:90px">Hudud</span><b>{{pe.area}}</b></div>
+     <div class="row"><span class="mut" style="width:90px">Ishonchlilik</span><b>{{pe.conf}}%</b></div>
+     <div style="height:8px;background:#E8ECF1;border-radius:6px"><div style="height:8px;border-radius:6px;background:{{pe.bar}};width:{{pe.conf}}%"></div></div>
+     <div class="mut">Aniq koordinata emas — kamera qayd etgan oxirgi hudud.</div>
+    </div>
+    <sc-if value="{{pe.review}}" hint-placeholder-val="{{false}}"><div class="cd" style="background:#FEF3C7;border-color:#F5D27A;display:flex;flex-direction:column;gap:10px"><b style="color:#92400E">Ishonchlilik chegaradan past (85%). Operator tekshiruvi kerak.</b><div class="row"><button class="btn pri" style="flex:1" onClick="{{go.vOk}}">Tasdiqlash</button><button class="btn" style="flex:1" onClick="{{go.vNo}}">Rad etish</button></div></div></sc-if>
+    <sc-if value="{{pe.decided}}" hint-placeholder-val="{{false}}"><div class="cd"><span class="bd b-info">{{pe.decTxt}}</span></div></sc-if>
+    <div class="cd" style="display:flex;flex-direction:column;gap:8px"><b>Bugungi harakat tarixi</b><sc-for list="{{pe.hist}}" as="x" hint-placeholder-count="4"><div class="row"><b style="width:48px">{{x.t}}</b><span style="flex:1">{{x.c}}</span><span class="mut">{{x.p}}%</span></div></sc-for></div>
+   </sc-if>
+   <sc-if value="{{pe.none}}" hint-placeholder-val="{{false}}"><div class="cd mut">Bugun kameralarda aniqlanmagan.</div></sc-if>
+   <div class="cd row"><div style="flex:1"><div class="mut">Ish grafigi (bugun)</div><b>{{pe.plan}}</b></div><div style="text-align:right"><div class="mut">Oylik davomat</div><b>{{pe.pct}}%</b></div></div>
+  </sc-if>
+
+  <sc-if value="{{t.rep}}" hint-placeholder-val="{{false}}">
+   <sc-for list="{{reps}}" as="r" hint-placeholder-count="4"><div class="cd row"><div style="flex:1"><b>{{r.n}}</b><div class="mut">{{r.d}}</div></div><button class="btn" style="min-height:44px" onClick="{{r.pdf}}">PDF</button><button class="btn" style="min-height:44px" onClick="{{r.xls}}">Excel</button></div></sc-for>
+   <sc-if value="{{exp.show}}" hint-placeholder-val="{{false}}"><div class="cd"><b>{{exp.txt}}</b><div style="height:8px;background:#E8ECF1;border-radius:6px;margin-top:8px"><div style="height:8px;border-radius:6px;background:#2563EB;width:{{exp.pct}}%"></div></div></div></sc-if>
+  </sc-if>
+
+  <sc-if value="{{t.profile}}" hint-placeholder-val="{{false}}">
+   <div class="cd row"><span class="av" style="width:56px;height:56px;background:#334155">RO</span><div><b style="font-size:16px">Rustam Ochilov</b><div class="mut">Administrator · login: admin</div><span class="bd b-ok">2FA yoqilgan</span></div></div>
+   <div class="cd" style="display:flex;flex-direction:column;gap:4px"><b style="margin-bottom:6px">Bildirishnomalar</b>
+    <sc-for list="{{togs}}" as="g" hint-placeholder-count="4"><div class="row" style="min-height:48px"><span style="flex:1">{{g.l}}</span><button role="switch" aria-checked="{{g.on}}" aria-label="{{g.l}}" style="width:52px;height:30px;border-radius:999px;border:0;padding:3px;cursor:pointer;display:flex;{{g.track}}" onClick="{{g.pick}}"><span style="width:24px;height:24px;border-radius:50%;background:#fff"></span></button></div></sc-for>
+   </div>
+   <div class="cd" style="display:flex;flex-direction:column;gap:6px"><b>Faol sessiya</b><div class="mut">Android ilova · 08:47 dan · mobil tarmoq</div></div>
+   <button class="btn" style="color:#B91C1C" onClick="{{go.logout}}">Tizimdan chiqish</button>
+  </sc-if>
+ </div>
+
+ <nav style="display:flex;background:#fff;border-top:1px solid #DDE3EA">
+  <sc-for list="{{tabs}}" as="x" hint-placeholder-count="5"><button class="tab {{x.cls}}" onClick="{{x.pick}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{x.ic}}"/></svg>{{x.l}}</button></sc-for>
+ </nav>
+ </sc-if>
+
+ <sc-if value="{{sheet}}" hint-placeholder-val="{{false}}">
+  <div style="position:absolute;inset:0;background:rgba(10,16,26,.55);display:flex;align-items:flex-end"><div style="background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;display:flex;flex-direction:column;gap:12px"><b style="font-size:16px">Buyruqni tasdiqlang</b><div>{{sheetTxt}}</div><div class="row"><button class="btn" style="flex:1" onClick="{{go.cancel}}">Bekor qilish</button><button class="btn" style="flex:1;background:#795548;border-color:#795548;color:#fff" onClick="{{go.confirm}}">Tasdiqlash</button></div></div></div>
+ </sc-if>
+ <sc-if value="{{toast}}" hint-placeholder-val="{{false}}"><div style="position:absolute;left:16px;right:16px;bottom:76px;background:#172337;color:#fff;padding:12px 14px;border-radius:8px;font-weight:600" role="status">{{toast}}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startTab":{"editor":null},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props){ super(props); const st=(props&&props.startTab)||"login";
+ this.state={tab:st,prev:"home",gate:"closed",fix:null,sel:"c1",sheet:null,msg:{k:"neutral",l:"Kutilmoqda",t:"Buyruq berilmagan."},sec:34867,exp:null,showPass:false,remember:true,evF:"all",attF:"all",sMode:"emp",q:"",emp:"e2",dec:{},live:true,playing:true,speed:1,pos:40.4,togs:{push:true,gate:true,unk:true,cam:false},toast:""};
+ this._t=null; }
+componentDidMount(){ this._t=setInterval(()=>{ const s=this.state; const u={sec:s.sec+1}; if(s.tab==="player"){ if(s.live) u.pos=(s.sec+1)/864; else if(s.playing) u.pos=Math.min(99.9,s.pos+s.speed*0.02); } this.setState(u); },1000); }
+componentWillUnmount(){ if(this._t) clearInterval(this._t); }
+hms(x){ const p=n=>(n<10?"0":"")+n; return p(Math.floor(x/3600))+":"+p(Math.floor(x%3600/60))+":"+p(Math.floor(x%60)); }
+toast(t){ this.setState({toast:t}); clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({toast:""}),2200); }
+renderVals(){
+ const s=this.state, me=this, v={};
+ const ic={shield:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",dash:"M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z",bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",video:"M23 7l-7 5 7 5zM3 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",gate:"M3 20h5M5.5 20V9M5.5 11h16v4h-16M10 11v4M14.5 11v4M19 11v4",file:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8",eye:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",user:"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",clock:"M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2",search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3",snap:"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",face:"M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 10v1M15 10v1M9 15c1 1 5 1 6 0",car:"M5 17h14M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0M3 13l2-6h12l4 5v5h-2M3 13v4h2M3 13h18",play:"M6 4l14 8-14 8z",pause:"M6 4h4v16H6zM14 4h4v16h-4z"};
+ v.ic=ic; const tb=s.tab; const SUB=["player","att","search","emp","profile"];
+ v.t={login:tb==="login",app:tb!=="login",sub:SUB.indexOf(tb)>=0,home:tb==="home",events:tb==="events",cams:tb==="cams",player:tb==="player",gate:tb==="gate",att:tb==="att",search:tb==="search",emp:tb==="emp",rep:tb==="rep",profile:tb==="profile"};
+ v.title={home:"Bosh sahifa",events:"Hodisalar",cams:"Kameralar",player:"Jonli ko'rish",gate:"Shlagbaum",att:"Bugungi davomat",search:"Qidiruv",emp:"Xodim",rep:"Hisobotlar",profile:"Profil va sozlamalar"}[tb]||"";
+ const nav=t=>()=>me.setState(p=>({tab:t,prev:SUB.indexOf(p.tab)>=0?p.prev:p.tab}));
+ v.tabs=[["home","Bosh",ic.dash],["events","Hodisalar",ic.bell],["cams","Kamera",ic.video],["gate","Shlagbaum",ic.gate],["rep","Hisobot",ic.file]].map(x=>({l:x[1],ic:x[2],cls:(tb===x[0]||(tb==="player"&&x[0]==="cams"))?"on":"",pick:()=>me.setState({tab:x[0]})}));
+ v.passType=s.showPass?"text":"password"; v.remember=s.remember; v.toast=s.toast;
+ v.kpis=[{l:"Bugun kelgan",v:11,s:"12 dan",k:"ok"},{l:"Hozir korxonada",v:10,s:"yuz bo'yicha",k:"info"},{l:"Kech qolgan",v:4,s:"grace 10 daq",k:"warn"},{l:"Kelmagan",v:1,s:"grafik bo'yicha",k:"danger"}];
+ const EV=[{t:"09:41",txt:"Aziz Karimov kirib keldi",cam:"Yuz — asosiy kirish",k:"ok",tag:"Kirish",ic:ic.face,w:false},{t:"09:38",txt:"Avtomobil kirdi — 01 A 123 AB",cam:"Kirish avto",k:"ok",tag:"Kirish",ic:ic.car,w:false},{t:"09:36",txt:"Noma'lum shaxs aniqlandi (tasdiqlanmagan)",cam:"Yuz — asosiy kirish",k:"warn",tag:"Tekshirish",ic:ic.face,w:true},{t:"09:34",txt:"Shlagbaum ochildi",cam:"1-darvoza",k:"info",tag:"Shlagbaum",ic:ic.gate,w:false},{t:"09:21",txt:"Kamera aloqasi uzildi — Ma'muriy bino",cam:"Ma'muriy bino",k:"danger",tag:"Aloqa",ic:ic.video,w:true},{t:"09:12",txt:"Zilola Hasanova chiqib ketdi",cam:"Yuz — asosiy kirish",k:"neutral",tag:"Chiqish",ic:ic.face,w:false},{t:"09:05",txt:"Avtomobil chiqdi — 95 E 987 KL",cam:"Chiqish avto",k:"neutral",tag:"Chiqish",ic:ic.car,w:false}];
+ v.evChips=[["all","Barchasi"],["warn","Muhim"],["car","Avtomobillar"]].map(o=>({l:o[1],cls:s.evF===o[0]?"on":"",pick:()=>me.setState({evF:o[0]})}));
+ v.events=EV.filter(e=>s.evF==="all"||(s.evF==="warn"?e.w:e.ic===ic.car));
+ v.ev3=EV.slice(0,3).map(e=>({t:e.t,txt:e.txt.length>26?e.txt.slice(0,25)+"…":e.txt,k:e.k,tag:e.tag}));
+ const G=[["c1","Kirish avto","FHD",1],["c2","Chiqish avto","FHD",1],["c3","Yuz — kirish","FHD",1],["c5","1-sex","HD",1],["c7","Ombor","HD",1],["c12","Ma'muriy bino","HD",0]];
+ v.cams=G.map((c,i)=>({name:c[1],q:c[2],lv:c[3]?"LIVE":"Oflayn",lvBg:c[3]?"#DC2626":"#475569",st:"background:"+(c[3]?"linear-gradient(160deg,"+["#243044","#1f3a3a","#33303f","#2a3a2a","#3a2f2a","#26324a"][i]+",#0b111a)":"#2B3140"),pick:()=>me.setState({sel:c[0],tab:"player",prev:"cams",live:true,playing:true})}));
+ v.selCam={name:(G.find(c=>c[0]===s.sel)||G[0])[1]};
+ // player
+ v.pmode=s.live?"LIVE":"ARXIV"; v.pmodeBg=s.live?"#DC2626":"#475569"; v.ppos=s.live?s.sec/864:s.pos; v.ptime=me.hms(Math.round(v.ppos*864)); v.playIc=(s.live||s.playing)?ic.pause:ic.play;
+ v.speeds=[0.25,0.5,1,2,4,8].map(x=>({l:x+"×",st:!s.live&&s.speed===x?"background:#2563EB;border-color:#2563EB;color:#fff":"background:#1E293B;border-color:#475569;color:#fff",pick:()=>me.setState({speed:x,live:false})}));
+ v.marks=[["05:58","Xodim kirib keldi","#16A34A"],["08:49","Avtomobil kirdi","#2563EB"],["09:12","Xodim chiqib ketdi","#94A3B8"],["09:36","Noma'lum shaxs aniqlandi","#F59E0B"]].map(m=>{const a=m[0].split(":"); const p=((+a[0])*60+(+a[1]))/14.4; return {t:m[0],txt:m[1],c:m[2],l:p,go:()=>me.setState({pos:p,live:false,playing:true})};});
+ const go={}; v.go=go;
+ go.seek=(e)=>me.setState({pos:+e.target.value,live:false}); go.pLive=()=>me.setState({live:true,playing:true,speed:1});
+ go.pPlay=()=>{ const st=me.state; if(st.live) me.setState({live:false,playing:false,pos:st.sec/864}); else me.setState({playing:!st.playing}); };
+ go.pBack=()=>me.setState(p=>({live:false,pos:Math.max(0,(p.live?p.sec/864:p.pos)-0.35)}));
+ go.snap=()=>me.toast("Snapshot saqlandi (demo)"); go.fs=()=>me.toast("Gorizontal to'liq ekran (demo)");
+ // gate
+ const gs=s.gate; v.gateTxt=gs==="open"?"Ochiq":gs==="closed"?"Yopiq":"Bajarilmoqda…"; v.openCls=gs==="open"?"on":""; v.closeCls=gs==="closed"?"on":"";
+ v.fixCls=s.fix?"b-warn":"b-neutral"; v.fixTxt=s.fix?"Fix: "+(s.fix==="open"?"ochiq":"yopiq"):"Fix o'chiq";
+ v.msg=s.msg; v.sheet=!!s.sheet;
+ v.sheetTxt={open:"1-darvoza shlagbaumi OCHILSINMI?",close:"1-darvoza shlagbaumi YOPILSINMI?",fixopen:"Shlagbaum OCHIQ holatda qulflansinmi? Oddiy buyruqlar bloklanadi.",fixclose:"Shlagbaum YOPIQ holatda qulflansinmi? Oddiy buyruqlar bloklanadi.",fixoff:"Fix rejimi bekor qilinsinmi?"}[s.sheet||"open"]+" Buyruq audit logga yoziladi.";
+ go.askOpen=()=>me.setState(s.fix?{msg:{k:"danger",l:"Rad etildi",t:"Fix rejimi faol. Avval uni bekor qiling."}}:{sheet:"open"}); go.askClose=()=>me.setState(s.fix?{msg:{k:"danger",l:"Rad etildi",t:"Fix rejimi faol. Avval uni bekor qiling."}}:{sheet:"close"});
+ go.fixOpen=()=>me.setState({sheet:s.fix?"fixoff":"fixopen"}); go.fixClose=()=>me.setState({sheet:s.fix?"fixoff":"fixclose"}); go.cancel=()=>me.setState({sheet:null});
+ go.confirm=()=>{ const k=me.state.sheet;
+  if(k==="fixoff"){ me.setState({sheet:null,fix:null,msg:{k:"neutral",l:"Fix bekor",t:"Oddiy boshqaruv tiklandi."}}); return; }
+  if(k==="fixopen"||k==="fixclose"){ const o=k==="fixopen"; me.setState({sheet:null,fix:o?"open":"close",gate:o?"open":"closed",msg:{k:"warn",l:"Fix faol",t:"Shlagbaum "+(o?"ochiq":"yopiq")+" holatda ushlab turilmoqda."}}); return; }
+  me.setState({sheet:null,gate:"moving",msg:{k:"warn",l:"Yuborildi",t:"Rele javobi kutilmoqda…"}}); setTimeout(()=>me.setState({gate:k==="open"?"open":"closed",msg:{k:"ok",l:"Bajarildi",t:"Datchik tasdig'i: shlagbaum "+(k==="open"?"ochiq":"yopiq")+" ("+me.hms(me.state.sec)+")."}}),1300); };
+ // employees
+ const COL=["#1E40AF","#0F766E","#9A3412","#6D28D9","#BE123C","#047857"];
+ const E=[{id:"e1",n:"Aziz Karimov",p:"Bosh muhandis · Boshqaruv",today:"O'z vaqtida · 08:52",k:"ok",ac:"ok",plan:"09:00–18:00",in:"08:52",pct:100,last:"09:41",cam:"Ma'muriy bino",area:"Binolar",conf:97,hist:[["09:41","Ma'muriy bino",97],["09:05","Oshxona",92],["08:56","Ma'muriy bino",95],["08:52","Yuz — asosiy kirish",97]]},
+  {id:"e2",n:"Dilnoza Rahimova",p:"Bosh buxgalter · Moliya",today:"Kechikdi +24 daq",k:"warn",ac:"late",plan:"09:00–18:00",in:"09:24",pct:95,last:"09:39",cam:"Ma'muriy bino",area:"Binolar",conf:81,hist:[["09:39","Ma'muriy bino",81],["09:28","Ma'muriy bino",90],["09:24","Yuz — asosiy kirish",97]]},
+  {id:"e3",n:"Jasur Toshmatov",p:"Stanok operatori · Ishlab chiqarish",today:"O'z vaqtida · 07:55",k:"ok",ac:"ok",plan:"08:00–17:00",in:"07:55",pct:100,last:"09:35",cam:"1-sex ichki",area:"Ishlab chiqarish",conf:95,hist:[["09:35","1-sex ichki",95],["07:59","Yuz — ishlab chiqarish",96],["07:55","Yuz — asosiy kirish",97]]},
+  {id:"e5",n:"Sherzod Nazarov",p:"Payvandchi · Ishlab chiqarish",today:"Sababli kechikish +31",k:"info",ac:"late",plan:"08:00–17:00",in:"08:31",pct:95,last:"09:30",cam:"1-sex ichki",area:"Ishlab chiqarish",conf:92,hist:[["09:30","1-sex ichki",92],["08:31","Yuz — asosiy kirish",97]]},
+  {id:"e6",n:"Nodira Abdullayeva",p:"Kadrlar inspektori · Boshqaruv",today:"Kelmadi",k:"danger",ac:"abs",plan:"09:00–18:00",in:"—",pct:77,last:null,hist:[]},
+  {id:"e8",n:"Gulnora Saidova",p:"Operator · Ishlab chiqarish",today:"Kechikdi +19 daq",k:"warn",ac:"late",plan:"06:00–14:00",in:"06:19",pct:85,last:"09:30",cam:"1-sex ichki",area:"Ishlab chiqarish",conf:76,hist:[["09:30","1-sex ichki",76],["06:19","Yuz — asosiy kirish",95]]},
+  {id:"e11",n:"Ravshan Aliyev",p:"Omborchi · Ombor",today:"Kechikdi +12 daq",k:"warn",ac:"late",plan:"08:00–20:00",in:"08:12",pct:90,last:"09:20",cam:"Ombor ichki",area:"Ombor",conf:94,hist:[["09:20","Ombor ichki",94],["08:12","Yuz — asosiy kirish",96]]},
+  {id:"e12",n:"Zilola Hasanova",p:"Sifat nazoratchisi · Ishlab chiqarish",today:"Erta ketdi 09:12",k:"warn",ac:"early",plan:"08:00–17:00",in:"08:02",pct:95,last:"09:12",cam:"Yuz — asosiy kirish",area:"Kirish",conf:96,hist:[["09:12","Yuz — asosiy kirish",96],["08:02","Yuz — asosiy kirish",97]]}];
+ const ini=n=>n.split(" ").map(x=>x[0]).join("");
+ const AC=[["all","Hammasi"],["late","Kechikkan"],["abs","Kelmadi"],["early","Erta ketdi"]];
+ v.attChips=AC.map(o=>({l:o[1],n:E.filter(e=>o[0]==="all"||e.ac===o[0]).length,cls:s.attF===o[0]?"on":"",pick:()=>me.setState({attF:o[0]})}));
+ v.att=E.filter(e=>s.attF==="all"||e.ac===s.attF).map((e,i)=>({n:e.n,ini:ini(e.n),col:COL[i%6],plan:e.plan,in:e.in,k:e.k,st:e.today.split(" ·")[0]}));
+ v.sTabs=[["emp","Xodim"],["car","Avtomobil"]].map(o=>({l:o[1],cls:s.sMode===o[0]?"on":"",pick:()=>me.setState({sMode:o[0],q:""})}));
+ v.sEmp=s.sMode==="emp"; v.sCar=s.sMode==="car"; v.q=s.q; v.sPh=v.sEmp?"F.I.Sh. kiriting":"Davlat raqami, masalan 01 A 123";
+ go.q=(e)=>me.setState({q:e.target.value});
+ const ql=s.q.trim().toLowerCase();
+ v.empRes=E.filter(e=>!ql||e.n.toLowerCase().indexOf(ql)>=0).map((e,i)=>({n:e.n,ini:ini(e.n),col:COL[E.indexOf(e)%6],lastTxt:e.last?"Oxirgi: "+e.last+" · "+e.cam:"Bugun aniqlanmagan",k:e.k,today:e.today.split(" ·")[0],pick:()=>me.setState({emp:e.id,tab:"emp",prev:"search"})}));
+ const CARS=[{p:"01 A 123 AB",w:"Aziz Karimov",d:"Kirdi 08:49",k:"ok",st:"Ruxsat berilgan"},{p:"01 X 321 YZ",w:"Egasi noma'lum",d:"Kirdi 09:36",k:"warn",st:"Ro'yxatda yo'q"},{p:"30 C 789 EF",w:"Yetkazib beruvchi",d:"Kirdi 09:12",k:"info",st:"Vaqtinchalik"},{p:"95 E 987 KL",w:"Kompaniya yuk avtomobili",d:"Chiqdi 09:05",k:"ok",st:"Ruxsat berilgan"}];
+ const qp=ql.replace(/\s/g,""); v.carRes=CARS.filter(c=>!qp||c.p.replace(/\s/g,"").toLowerCase().indexOf(qp)>=0);
+ const pe=E.find(e=>e.id===s.emp)||E[0]; const dec=s.dec[pe.id];
+ v.pe={n:pe.n,p:pe.p,ini:ini(pe.n),col:COL[E.indexOf(pe)%6],today:pe.today,k:pe.k,seen:!!pe.last,none:!pe.last,last:pe.last,cam:pe.cam,area:pe.area,conf:pe.conf,bar:pe.conf>=85?"#16A34A":"#F59E0B",review:!!pe.last&&pe.conf<85&&!dec,decided:!!dec,decTxt:dec==="ok"?"Operator tasdiqladi":"Operator rad etdi — shaxs tasdiqlanmagan",plan:pe.plan,pct:pe.pct,hist:pe.hist.map(h=>({t:h[0],c:h[1],p:h[2]}))};
+ go.vOk=()=>me.setState(p=>({dec:Object.assign({},p.dec,{[pe.id]:"ok"})})); go.vNo=()=>me.setState(p=>({dec:Object.assign({},p.dec,{[pe.id]:"no"})}));
+ // reports
+ const ex=s.exp; v.exp={show:!!ex,pct:ex?ex.pct:0,txt:ex?(ex.pct<100?"Tayyorlanmoqda ("+ex.f+")… "+ex.pct+"%":"Tayyor: "+ex.n+" ("+ex.f+", demo fayl)"):""};
+ const run=(n,f)=>()=>{ me.setState({exp:{pct:0,n,f}}); const st=()=>{ const e=me.state.exp; if(!e) return; const k=Math.min(100,e.pct+25); me.setState({exp:{pct:k,n:e.n,f:e.f}}); if(k<100) setTimeout(st,300); }; setTimeout(st,300); };
+ v.reps=[{n:"Kunlik davomat",d:"10.11.2026"},{n:"Kechikishlar",d:"Oktyabr 2026"},{n:"Avtomobillar",d:"Bugun"},{n:"Xavfsizlik hodisalari",d:"Bugun"}].map(r=>({n:r.n,d:r.d,pdf:run(r.n,"PDF"),xls:run(r.n,"Excel")}));
+ // profile
+ const TG=[["push","Push bildirishnomalar"],["gate","Shlagbaum hodisalari"],["unk","Noma'lum shaxs va avtomobil"],["cam","Kamera aloqasi uzilishi"]];
+ v.togs=TG.map(g=>{ const on=!!s.togs[g[0]]; return {l:g[1],on,track:on?"background:#16A34A;justify-content:flex-end":"background:#CBD5E1;justify-content:flex-start",pick:()=>me.setState(p=>({togs:Object.assign({},p.togs,{[g[0]]:!p.togs[g[0]]})}))}; });
+ // nav handlers
+ go.login=(e)=>{ if(e&&e.preventDefault) e.preventDefault(); me.setState({tab:"home"}); };
+ go.showPass=()=>me.setState({showPass:!s.showPass}); go.remember=()=>me.setState({remember:!s.remember});
+ go.logout=()=>me.setState({tab:"login"}); go.back=()=>me.setState(p=>({tab:p.tab==="emp"?"search":(p.prev||"home")}));
+ go.gate=nav("gate"); go.att=nav("att"); go.search=nav("search"); go.rep=nav("rep"); go.profile=nav("profile"); go.player=()=>me.setState({tab:"player",prev:"home",live:true,playing:true});
+ return v;
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# .NET
+bin/
+obj/
+*.user
+TestResults/
+
+# Node
+node_modules/
+dist/
+*.local
+
+# Secrets — BR-PRIV-06: hech qachon repozitoriyga yozilmaydi
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
+
+# Local data
+data/
+*.db
+*.db-journal
+
+# IDE / OS
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+.DS_Store

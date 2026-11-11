@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Smart Access Control — Platforma</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+.root{display:flex;flex-wrap:wrap;min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.45}
+.root button,.root input,.root select{font-family:inherit;font-size:13px;color:inherit}
+h1,h2,h3{font-family:'Space Grotesk',Inter,sans-serif;margin:0}
+h1{font-size:22px}h2{font-size:16px}h3{font-size:14px}
+.side{flex:1 1 248px;max-width:260px;background:var(--side);color:#C9D3E0;display:flex;flex-direction:column;padding:16px 12px;gap:6px}
+.main{flex:999 1 560px;min-width:0;padding:20px 24px 40px;display:flex;flex-direction:column;gap:16px}
+@media(max-width:700px){.side{max-width:none;flex-basis:100%}.main{padding:16px}}
+.nv{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:6px;border:0;background:transparent;color:#C9D3E0;text-align:left;cursor:pointer;font-weight:500;width:100%}
+.nv:hover{background:#22324D}.nv.on{background:var(--accent);color:#fff}
+.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px}
+.row{display:flex;align-items:center;gap:12px}.wrap{flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:12px}
+.muted{color:var(--muted)}.sm{font-size:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--s2)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.navy{background:var(--slate);border-color:var(--slate);color:#fff}
+.btn.brown{background:var(--brown);border-color:var(--brown);color:#fff}
+.btn.danger{background:#B91C1C;border-color:#B91C1C;color:#fff}
+.btn.ico{padding:0;width:40px}
+.chip{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-weight:600}
+.chip.on{background:var(--slate);border-color:var(--slate);color:#fff}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.b-ok{background:var(--okbg);color:var(--oktx)}.b-warn{background:var(--warnbg);color:var(--warntx)}.b-danger{background:var(--dangerbg);color:var(--dangertx)}.b-info{background:var(--infobg);color:var(--infotx)}.b-neutral,.b-idle{background:var(--nbg);color:var(--ntx)}
+.inp{height:40px;width:100%;border:1px solid var(--border);border-radius:6px;padding:0 10px;background:var(--surface);color:var(--text)}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.tw{overflow-x:auto}
+.t{width:100%;border-collapse:collapse}
+.t th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+.t td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.lnk{background:none;border:0;padding:0;color:var(--acctx);font-weight:600;cursor:pointer;text-align:left}
+.av{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex:none}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.crumb{font-size:12px;color:var(--muted)}
+.ban{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;font-weight:600}
+.cam{position:relative;display:block;width:100%;aspect-ratio:16/9;border:0;padding:0;border-radius:6px;overflow:hidden;cursor:pointer;color:#fff;text-align:left}
+.scn{position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 2px,transparent 2px 14px)}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;letter-spacing:.3em;color:rgba(255,255,255,.12)}
+.hud{position:absolute;display:flex;gap:6px;align-items:center;font-size:11px;font-weight:600}
+.hud .pl{background:rgba(0,0,0,.6);padding:2px 6px;border-radius:4px;color:#fff}
+.hud .lv{background:#DC2626;padding:2px 6px;border-radius:4px;color:#fff}
+.tl{top:8px;left:8px;flex-direction:column;align-items:flex-start;gap:2px}.tr{top:8px;right:8px}.bl{bottom:8px;left:8px}.br{bottom:8px;right:8px}
+.bx{position:absolute;border:2px solid #22C55E;border-radius:3px}
+.bx span{position:absolute;top:-18px;left:-2px;background:#16A34A;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.sq{flex:1 1 0;aspect-ratio:1/1;min-width:110px;max-width:220px;background:var(--brown);color:#fff;border:3px solid transparent;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;letter-spacing:.05em;cursor:pointer}
+.sq .i{width:52px;height:52px;stroke-width:1.6}
+.sq .st{font-size:11px;font-weight:600}
+.sq.on{border-color:#fff;box-shadow:0 0 0 4px var(--accent)}
+.sq.busy{opacity:.55;cursor:progress}
+.arm{position:absolute;left:62px;bottom:52px;width:220px;height:14px;background:repeating-linear-gradient(90deg,#fff 0 24px,#B91C1C 24px 48px);transform-origin:left center;transition:transform .8s;border-radius:3px}
+.login{flex:1 1 100%;display:flex;flex-wrap:wrap;min-height:100vh}
+.lg-l{flex:1 1 420px;background:var(--side);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.lg-r{flex:1 1 420px;display:flex;align-items:center;justify-content:center;padding:32px}
+.modal{position:fixed;inset:0;background:rgba(10,16,26,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:8px;font-weight:600;z-index:60;max-width:90vw}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:12px}
+</style>
+</helmet>
+<div class="root" style="{{rootStyle}}">
+
+<sc-if value="{{sc.login}}" hint-placeholder-val="{{true}}">
+<div class="login">
+ <div class="lg-l">
+  <div class="row"><svg class="i" style="width:36px;height:36px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shield}}"/></svg><h2 style="font-size:20px">SMART ACCESS</h2></div>
+  <h1 style="font-size:30px;line-height:1.2">Korxona kirish-chiqish nazorati va intellektual videokuzatuv</h1>
+  <div class="col" style="gap:8px;color:#C9D3E0">
+   <div>Yuz orqali tanish (Face Recognition) va avtomobil raqami (ANPR / LPR)</div>
+   <div>Shlagbaumni masofadan boshqarish va ko'p kamerali monitoring</div>
+   <div>Ish grafigi asosida davomat hisobi va onlayn hisobotlar</div>
+  </div>
+  <div class="sm" style="color:#9FB0C6">Demo rejim: haqiqiy kamera, biometrik tanish va shlagbaum apparati ulanmagan. Barcha ma'lumotlar simulyatsiya.</div>
+ </div>
+ <div class="lg-r">
+  <form class="card col" style="width:100%;max-width:400px;gap:14px" onSubmit="{{h.login}}">
+   <h2>Tizimga kirish</h2>
+   <div><label class="lbl" for="corp">Korxona identifikatori</label><input id="corp" class="inp" value="{{fld.corp.v}}" onInput="{{fld.corp.c}}"></div>
+   <div><label class="lbl" for="lg">Login</label><input id="lg" class="inp" value="{{fld.login.v}}" onInput="{{fld.login.c}}" autocomplete="off"></div>
+   <div><label class="lbl" for="ps">Parol</label>
+    <div class="row" style="gap:8px"><input id="ps" class="inp" type="{{passType}}" value="{{fld.pass.v}}" onInput="{{fld.pass.c}}"><button type="button" class="btn ico" aria-label="Parolni ko'rsatish" onClick="{{h.showPass}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.eye}}"/></svg></button></div></div>
+   <label class="row" style="gap:8px"><input type="checkbox" checked="{{remember}}" onChange="{{h.remember}}"> Eslab qolish</label>
+   <sc-if value="{{loginErr}}" hint-placeholder-val="{{false}}"><div class="ban b-danger" role="alert">{{loginErr}}</div></sc-if>
+   <button type="submit" class="btn pri" style="min-height:44px">Tizimga kirish</button>
+   <div class="sm muted">Login va parollarni faqat administrator yaratadi. Ikki bosqichli autentifikatsiya (2FA) sozlamalardan yoqiladi.</div>
+   <div class="sm" style="font-weight:600">Demo hisoblar (parol: demo)</div>
+   <div class="row wrap" style="gap:8px">
+    <button type="button" class="chip" onClick="{{h.demoG}}">qorovul</button>
+    <button type="button" class="chip" onClick="{{h.demoA}}">admin</button>
+    <button type="button" class="chip" onClick="{{h.demoM}}">mas_ul</button>
+   </div>
+  </form>
+ </div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.app}}" hint-placeholder-val="{{false}}">
+<aside class="side">
+ <div class="row" style="padding:4px 8px 12px;color:#fff"><svg class="i" style="width:28px;height:28px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shield}}"/></svg><div><div style="font-weight:700;letter-spacing:.06em">SMART ACCESS</div><div class="sm" style="color:#9FB0C6">{{roleLabel}}</div></div></div>
+ <nav class="col" style="gap:2px">
+  <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+   <button class="nv {{n.cls}}" onClick="{{n.go}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{n.ic}}"/></svg><span>{{n.label}}</span></button>
+  </sc-for>
+ </nav>
+ <div style="flex:1"></div>
+ <div class="row" style="padding:8px;border-top:1px solid #2D3E58;margin-top:8px;color:#C9D3E0">
+  <span class="av" style="background:#334155">{{userInit}}</span><div style="flex:1;min-width:0"><div style="font-weight:600;color:#fff">{{userName}}</div><div class="sm">{{conn.t}}</div></div>
+  <button class="btn ico" style="background:transparent;border-color:#2D3E58;color:#C9D3E0" aria-label="Chiqish" onClick="{{h.logout}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.out}}"/></svg></button>
+ </div>
+</aside>
+<main class="main">
+ <header class="top">
+  <div><div class="crumb">{{roleLabel}} / {{title}}</div><h1>{{title}}</h1></div>
+  <div class="row wrap" style="margin-left:auto;gap:8px">
+   <sc-if value="{{fixOn}}" hint-placeholder-val="{{false}}"><span class="badge b-warn"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.lock}}"/></svg>{{fixText}}</span></sc-if>
+   <span class="badge b-{{conn.k}}"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:currentColor"></span>{{conn.t}}</span>
+   <button class="btn ico" aria-label="Qorong'i / yorug' rejim" onClick="{{h.theme}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{themeIc}}"/></svg></button>
+  </div>
+ </header>
+ <sc-if value="{{offline}}" hint-placeholder-val="{{false}}"><div class="ban b-warn" role="status">Internet uzildi — kirish-chiqish hodisalari lokal tarmoqda qayd etilmoqda ({{pend}} ta kutilmoqda). Aloqa qaytganda avtomatik sinxronlanadi.</div></sc-if>
+
+<!-- ===== GUARD DASHBOARD ===== -->
+<sc-if value="{{sc.gDash}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="col" style="flex:2 1 520px;min-width:0">
+  <div class="card col">
+   <div class="row"><h2>Kameralar — jonli</h2><span class="badge b-info">DEMO tasvir</span><button class="btn" style="margin-left:auto" onClick="{{h.toCams}}">Barcha kameralar</button></div>
+   <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+    <sc-for list="{{cams4}}" as="c" hint-placeholder-count="4">
+     <button type="button" class="cam" style="{{c.style}}" onClick="{{c.open}}" aria-label="{{c.name}}">
+      <span class="scn"></span><span class="wm">DEMO</span>
+      <sc-if value="{{c.online}}" hint-placeholder-val="{{true}}">
+       <span class="bx" style="{{c.box}}"><span>{{c.boxLbl}}</span></span>
+       <span class="hud tl"><span class="pl">{{c.name}}</span><span class="pl">{{c.loc}}</span></span>
+       <span class="hud tr"><span class="lv">LIVE</span><span class="pl">REC</span></span>
+       <span class="hud bl"><span class="pl">{{clock}}</span></span>
+       <span class="hud br"><span class="pl">{{c.q}} · {{c.aiTxt}}</span></span>
+      </sc-if>
+      <sc-if value="{{c.offline}}" hint-placeholder-val="{{false}}"><span class="hud" style="inset:0;justify-content:center;font-size:13px"><span class="pl" style="background:#B91C1C">Aloqa uzilgan</span></span></sc-if>
+     </button>
+    </sc-for>
+   </div>
+  </div>
+  <div class="card col">
+   <h2>Tezkor qidiruv</h2>
+   <div class="row wrap"><input class="inp" style="flex:1 1 240px" placeholder="F.I.Sh. yoki avtomobil raqami" value="{{fld.gq.v}}" onInput="{{fld.gq.c}}" aria-label="Qidiruv"><button class="btn" onClick="{{h.faceImg}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.face}}"/></svg>Yuz tasviri bo'yicha</button></div>
+   <sc-for list="{{gsRes}}" as="r" hint-placeholder-count="0">
+    <div class="row" style="padding:10px;border:1px solid var(--border);border-radius:6px"><span class="av" style="background:{{r.col}}">{{r.init}}</span><div style="flex:1"><div style="font-weight:600">{{r.title}}</div><div class="sm muted">{{r.sub}}</div></div><span class="badge b-{{r.k}}">{{r.state}}</span></div>
+   </sc-for>
+   <sc-if value="{{gsEmpty}}" hint-placeholder-val="{{false}}"><div class="sm muted">Natija topilmadi.</div></sc-if>
+  </div>
+ </div>
+ <div class="col" style="flex:1 1 320px;min-width:0">
+  <div class="card col">
+   <div class="row"><h2>Shlagbaum</h2><span class="badge b-{{g.badgeK}}" style="margin-left:auto">{{g.stateTxt}}</span></div>
+   <div class="row" style="justify-content:center;gap:12px">
+    <button class="sq {{g.openCls}}" onClick="{{h.gOpen}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.gateOpen}}"/></svg>OCHISH<span class="st">{{g.openSub}}</span></button>
+    <button class="sq {{g.closeCls}}" onClick="{{h.gClose}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.gateClosed}}"/></svg>YOPISH<span class="st">{{g.closeSub}}</span></button>
+   </div>
+   <div class="ban b-{{gateMsg.k}}" role="status">{{gateMsg.t}}</div>
+   <div class="row wrap" style="gap:8px"><button class="btn" style="flex:1" onClick="{{h.fixOpenAsk}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.lock}}"/></svg>Ochiq holatda fix</button><button class="btn" style="flex:1" onClick="{{h.fixClosedAsk}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.lock}}"/></svg>Yopiq holatda fix</button></div>
+   <sc-if value="{{fixOn}}" hint-placeholder-val="{{false}}"><div class="ban b-warn">{{fixText}}<button class="btn" style="margin-left:auto;min-height:32px" onClick="{{h.fixOff}}">Bekor qilish</button></div></sc-if>
+  </div>
+  <div class="card col">
+   <h2>Tezkor hodisalar</h2>
+   <sc-for list="{{events}}" as="ev" hint-placeholder-count="5">
+    <div class="row" style="align-items:flex-start;gap:10px">
+     <span class="av" style="border-radius:6px;background:#1E293B"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ev.ic}}"/></svg></span>
+     <div style="flex:1;min-width:0"><div style="font-weight:600">{{ev.txt}}</div><div class="sm muted">{{ev.cam}}</div></div>
+     <div style="text-align:right"><div class="sm" style="font-weight:600">{{ev.t}}</div><span class="badge b-{{ev.k}}">{{ev.tag}}</span></div>
+    </div>
+   </sc-for>
+  </div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== MULTI-CAMERA ===== -->
+<sc-if value="{{sc.gCams}}" hint-placeholder-val="{{false}}">
+<div class="ban b-info">Demo rejim: haqiqiy kamera ulanmagan, tasvirlar simulyatsiya. Tasvirni sudrab boshqa katakka tashlash mumkin (Drag &amp; Drop).</div>
+<div class="card row wrap">
+ <div class="row wrap" style="gap:6px"><span class="sm muted" style="font-weight:600">Grid</span>
+  <sc-for list="{{gridOpts}}" as="o" hint-placeholder-count="5"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+ <input class="inp" style="flex:1 1 200px;max-width:280px" placeholder="Kamera bo'yicha qidirish" value="{{fld.cq.v}}" onInput="{{fld.cq.c}}" aria-label="Kamera qidirish">
+ <div class="row wrap" style="gap:6px"><sc-for list="{{areaOpts}}" as="o" hint-placeholder-count="4"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+ <div class="row" style="margin-left:auto;gap:8px">
+  <button class="btn" onClick="{{h.toPlayer}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.max}}"/></svg>Fullscreen: {{selName}}</button>
+  <sc-if value="{{isAdmin}}" hint-placeholder-val="{{false}}"><button class="btn pri" onClick="{{h.toCamNew}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg>Kamera qo'shish</button></sc-if>
+ </div>
+</div>
+<div class="sm muted">Oqim boshqaruvi: ko'rinadigan {{vis}} ta kamera asosiy oqimda (main stream), qolganlari sub-stream / snapshot rejimida — interfeys qotmasligi uchun resurs tejaladi.</div>
+<div style="display:grid;gap:8px;{{gridCss}}">
+ <sc-for list="{{tiles}}" as="c" hint-placeholder-count="4">
+  <div style="{{c.cell}}">
+   <sc-if value="{{c.empty}}" hint-placeholder-val="{{false}}"><div style="aspect-ratio:16/9;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:8px">Bo'sh katak — kamerani shu yerga sudrab keling</div></sc-if>
+   <sc-if value="{{c.full}}" hint-placeholder-val="{{true}}">
+    <button type="button" class="cam" style="{{c.style}}" draggable="true" onClick="{{c.pick}}" onDragStart="{{c.ds}}" onDragOver="{{c.dov}}" onDrop="{{c.drop}}" aria-label="{{c.name}}">
+     <span class="scn"></span><span class="wm">DEMO</span>
+     <sc-if value="{{c.online}}" hint-placeholder-val="{{true}}">
+      <span class="bx" style="{{c.box}}"><span>{{c.boxLbl}}</span></span>
+      <span class="hud tl"><span class="pl">{{c.name}}</span><span class="pl">{{c.loc}}</span></span>
+      <span class="hud tr"><span class="lv">LIVE</span><span class="pl">REC</span></span>
+      <span class="hud bl"><span class="pl">{{clock}}</span></span>
+      <span class="hud br"><span class="pl">{{c.q}} · {{c.aiTxt}}</span></span>
+     </sc-if>
+     <sc-if value="{{c.offline}}" hint-placeholder-val="{{false}}"><span class="hud" style="inset:0;justify-content:center;font-size:13px"><span class="pl" style="background:#B91C1C">Aloqa uzilgan</span></span></sc-if>
+    </button>
+   </sc-if>
+  </div>
+ </sc-for>
+</div>
+</sc-if>
+
+<!-- ===== GATE ===== -->
+<sc-if value="{{sc.gGate}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:1 1 420px;align-items:center">
+  <div class="row" style="width:100%"><h2>Shlagbaum boshqaruvi — 1-darvoza</h2><span class="badge b-{{g.badgeK}}" style="margin-left:auto">{{g.stateTxt}}</span></div>
+  <div style="position:relative;width:300px;height:130px;max-width:100%"><div style="position:absolute;left:50px;bottom:0;width:24px;height:96px;background:var(--slate);border-radius:4px"></div><div class="arm" style="{{g.armStyle}}"></div></div>
+  <div class="row" style="justify-content:center;gap:16px;width:100%">
+   <button class="sq {{g.openCls}}" onClick="{{h.gOpen}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.gateOpen}}"/></svg>OCHISH<span class="st">{{g.openSub}}</span></button>
+   <button class="sq {{g.closeCls}}" onClick="{{h.gClose}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.gateClosed}}"/></svg>YOPISH<span class="st">{{g.closeSub}}</span></button>
+  </div>
+  <div class="ban b-{{gateMsg.k}}" style="width:100%" role="status">{{gateMsg.t}}</div>
+  <div class="row wrap" style="width:100%;gap:8px"><button class="btn" style="flex:1" onClick="{{h.fixOpenAsk}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.lock}}"/></svg>Ochiq holatda fix qilish</button><button class="btn" style="flex:1" onClick="{{h.fixClosedAsk}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.lock}}"/></svg>Yopiq holatda fix qilish</button></div>
+  <sc-if value="{{fixOn}}" hint-placeholder-val="{{false}}"><div class="ban b-warn" style="width:100%">{{fixText}}<button class="btn" style="margin-left:auto;min-height:32px" onClick="{{h.fixOff}}">Fixni bekor qilish</button></div></sc-if>
+  <label class="row sm muted" style="gap:8px;width:100%"><input type="checkbox" checked="{{failSim}}" onChange="{{h.failSim}}"> Demo: buyruq xatosini simulyatsiya qilish</label>
+ </div>
+ <div class="col" style="flex:1 1 360px;min-width:0">
+  <div class="card col"><h2>Apparat holati (qayta aloqa)</h2>
+   <sc-for list="{{hw}}" as="x" hint-placeholder-count="4"><div class="row"><span style="flex:1">{{x.l}}</span><span class="badge b-{{x.k}}">{{x.v}}</span></div></sc-for>
+   <div class="sm muted">Avariya holatida shlagbaumni qo'lda boshqarish imkoniyati saqlanadi. Bu demo — haqiqiy rele ulanmagan.</div>
+  </div>
+  <div class="card col"><h2>Buyruqlar jurnali</h2>
+   <div class="tw"><table class="t"><thead><tr><th>Vaqt</th><th>Foydalanuvchi</th><th>Buyruq</th><th>Natija</th></tr></thead><tbody>
+    <sc-for list="{{gateLog}}" as="r" hint-placeholder-count="3"><tr><td>{{r.t}}</td><td>{{r.who}}</td><td>{{r.cmd}}</td><td><span class="badge b-{{r.k}}">{{r.res}}</span></td></tr></sc-for>
+   </tbody></table></div>
+   <sc-if value="{{gateLogEmpty}}" hint-placeholder-val="{{false}}"><div class="sm muted">Hozircha buyruq berilmagan. Barcha buyruqlar audit logga yoziladi.</div></sc-if>
+  </div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<sc-if value="{{sc.aDash}}" hint-placeholder-val="{{false}}">
+<div class="kp">
+ <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+  <div class="card col" style="gap:6px"><div class="row"><span class="av" style="border-radius:8px;width:34px;height:34px;background:var(--{{k.k}}bg);color:var(--{{k.k}}tx)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{k.ic}}"/></svg></span><div class="sm muted" style="font-weight:600">{{k.l}}</div></div><div style="font-family:'Space Grotesk';font-size:30px;font-weight:700">{{k.v}}</div><div class="sm muted">{{k.sub}}</div></div>
+ </sc-for>
+</div>
+<div class="g2">
+ <div class="card col"><div class="row"><h2>Kirish va chiqishlar — soatlar bo'yicha</h2><span class="badge b-info" style="margin-left:auto">Demo</span></div>
+  <div class="row" style="align-items:flex-end;height:170px;gap:10px;border-bottom:1px solid var(--border)">
+   <sc-for list="{{bars}}" as="b" hint-placeholder-count="10"><div style="flex:1;display:flex;align-items:flex-end;gap:3px;height:100%"><div style="flex:1;background:var(--accent);height:{{b.hi}}%;border-radius:3px 3px 0 0" title="Kirish"></div><div style="flex:1;background:var(--brown);height:{{b.ho}}%;border-radius:3px 3px 0 0" title="Chiqish"></div></div></sc-for>
+  </div>
+  <div class="row" style="gap:10px"><sc-for list="{{bars}}" as="b" hint-placeholder-count="10"><div class="sm muted" style="flex:1;text-align:center">{{b.l}}</div></sc-for></div>
+  <div class="row sm"><span class="row" style="gap:6px"><span style="width:10px;height:10px;background:var(--accent);border-radius:2px"></span>Kirish</span><span class="row" style="gap:6px"><span style="width:10px;height:10px;background:var(--brown);border-radius:2px"></span>Chiqish</span></div>
+ </div>
+ <div class="card col"><h2>Bugungi davomat holati</h2>
+  <div class="row wrap" style="gap:24px"><div style="width:150px;height:150px;border-radius:50%;{{donut}};display:flex;align-items:center;justify-content:center"><div style="width:96px;height:96px;border-radius:50%;background:var(--surface)"></div></div>
+   <div class="col" style="gap:8px"><sc-for list="{{donutLeg}}" as="d" hint-placeholder-count="4"><div class="row" style="gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:{{d.c}}"></span><span>{{d.l}}</span><b>{{d.n}}</b></div></sc-for></div></div>
+  <div class="row wrap"><button class="btn" onClick="{{h.toAtt}}">Davomat monitoringi</button><button class="btn" onClick="{{h.toCams}}">Multi-kamera</button></div>
+ </div>
+</div>
+<div class="g2">
+ <div class="card col"><h2>Oxirgi hodisalar</h2>
+  <sc-for list="{{events}}" as="ev" hint-placeholder-count="5"><div class="row"><span class="badge b-{{ev.k}}" style="min-width:84px;justify-content:center">{{ev.tag}}</span><div style="flex:1">{{ev.txt}}</div><span class="sm muted">{{ev.t}}</span></div></sc-for>
+ </div>
+ <div class="card col"><h2>Kameralar holati</h2>
+  <sc-for list="{{camHealth}}" as="c" hint-placeholder-count="5"><div class="row"><span class="badge b-{{c.k}}">{{c.st}}</span><div style="flex:1">{{c.name}}</div><span class="sm muted">{{c.net}}</span></div></sc-for>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== EMPLOYEES ===== -->
+<sc-if value="{{sc.aEmp}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap">
+ <input class="inp" style="flex:1 1 220px;max-width:300px" placeholder="F.I.Sh. bo'yicha qidirish" value="{{fld.eq.v}}" onInput="{{fld.eq.c}}" aria-label="Xodim qidirish">
+ <div class="row wrap" style="gap:6px"><sc-for list="{{deptOpts}}" as="o" hint-placeholder-count="4"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+ <div class="row wrap" style="margin-left:auto;gap:8px">
+  <button class="btn" onClick="{{h.xlsImp}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.upload}}"/></svg>Excel import</button>
+  <button class="btn" onClick="{{h.xlsExp}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.dl}}"/></svg>Eksport</button>
+  <button class="btn pri" onClick="{{h.empNew}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg>Xodim qo'shish</button>
+ </div>
+</div>
+<div class="card tw"><table class="t"><thead><tr><th>ID</th><th>F.I.Sh.</th><th>Lavozim</th><th>Bo'lim</th><th>Guruh</th><th>Ish grafigi</th><th>Holat</th><th></th></tr></thead><tbody>
+ <sc-for list="{{empRows}}" as="r" hint-placeholder-count="6"><tr>
+  <td class="muted">{{r.id}}</td>
+  <td><div class="row" style="gap:10px"><span class="av" style="background:{{r.col}}">{{r.init}}</span><button class="lnk" onClick="{{r.open}}">{{r.name}}</button></div></td>
+  <td>{{r.pos}}</td><td>{{r.dept}}</td><td>{{r.groupName}}</td>
+  <td>{{r.sched}} <sc-if value="{{r.ind}}" hint-placeholder-val="{{false}}"><span class="badge b-info">Individual</span></sc-if></td>
+  <td><span class="badge b-ok">Faol</span></td><td><button class="btn" style="min-height:32px;color:#B91C1C" onClick="{{r.del}}">O'chirish</button></td></tr></sc-for>
+</tbody></table></div>
+</sc-if>
+
+<!-- ===== EMPLOYEE PROFILE ===== -->
+<sc-if value="{{sc.aEmpProf}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="col" style="flex:1 1 320px;min-width:0">
+  <div class="card col">
+   <div class="row" style="gap:14px"><span class="av" style="width:72px;height:72px;font-size:24px;background:{{pe.col}}">{{pe.init}}</span><div><h2>{{pe.name}}</h2><div class="muted">{{pe.pos}} · {{pe.dept}}</div><span class="badge b-ok">Faol</span></div></div>
+   <div class="g2" style="gap:10px">
+    <div><div class="sm muted">ID raqam</div><b>{{pe.id}}</b></div><div><div class="sm muted">Telefon</div><b>{{pe.phone}}</b></div>
+    <div><div class="sm muted">Ishga qabul qilingan</div><b>{{pe.hired}}</b></div><div><div class="sm muted">Guruh</div><b>{{pe.groupName}}</b></div>
+   </div>
+   <div class="row wrap"><button class="btn pri" onClick="{{h.empEditSel}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.edit}}"/></svg>Tahrirlash</button><button class="btn" onClick="{{h.toEmpList}}">Ro'yxatga qaytish</button><button class="btn" style="color:#B91C1C" onClick="{{h.empDelSel}}">Xodimni o'chirish</button></div>
+  </div>
+  <div class="card col"><h2>Yuz biometrikasi</h2>
+   <div class="row wrap" style="gap:8px"><sc-for list="{{pe.faces}}" as="x" hint-placeholder-count="5"><div style="width:64px;height:64px;border-radius:8px;background:#1E293B;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.face}}"/></svg>{{x.q}}</div></sc-for></div>
+   <div class="sm muted">Xavfsiz identifikator: <b>{{pe.bio}}</b>. Shablon shifrlangan holda alohida himoyalangan omborda saqlanadi, ochiq bazada emas.</div>
+  </div>
+ </div>
+ <div class="col" style="flex:2 1 460px;min-width:0">
+  <div class="card col"><div class="row"><h2>Ish grafigi: {{pe.schedName}}</h2><span class="badge b-{{pe.levelK}}" style="margin-left:auto">{{pe.level}}</span></div>
+   <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px"><sc-for list="{{pe.week}}" as="d" hint-placeholder-count="7"><div style="padding:8px 4px;border-radius:6px;text-align:center;font-size:12px;{{d.st}}"><b>{{d.d}}</b><div>{{d.txt}}</div></div></sc-for></div>
+   <div class="row wrap"><div>Bugun: <b>{{pe.today.plan}}</b></div><span class="badge b-{{pe.today.ik}}">{{pe.today.it}}</span><span class="badge b-{{pe.today.ok}}">{{pe.today.ot}}</span></div>
+  </div>
+  <div class="g2">
+   <div class="card col"><h2>Oylik ko'rsatkichlar (oktyabr)</h2>
+    <div class="row wrap" style="gap:24px"><div><div class="sm muted">Davomat</div><div style="font-size:28px;font-weight:700;font-family:'Space Grotesk'">{{pe.pct}}%</div></div><div><div class="sm muted">Kechikish</div><b>{{pe.late}} marta</b></div><div><div class="sm muted">Erta ketish</div><b>{{pe.early}} marta</b></div><div><div class="sm muted">Kelmagan</div><b>{{pe.abs}} kun</b></div></div>
+    <div style="height:10px;background:var(--nbg);border-radius:6px"><div style="height:10px;border-radius:6px;background:var(--ok);width:{{pe.pct}}%"></div></div></div>
+   <div class="card col"><h2>Oxirgi aniqlanishlar</h2>
+    <sc-for list="{{pe.dets}}" as="x" hint-placeholder-count="3"><div class="row"><b>{{x.t}}</b><div style="flex:1">{{x.cam}}</div><span class="sm muted">{{x.conf}}%</span></div></sc-for>
+    <sc-if value="{{pe.noDets}}" hint-placeholder-val="{{false}}"><div class="sm muted">Bugun aniqlanmagan.</div></sc-if>
+   </div>
+  </div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== EMPLOYEE EDIT ===== -->
+<sc-if value="{{sc.aEmpEdit}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:2 1 460px">
+  <h2>Asosiy ma'lumotlar</h2>
+  <div class="g2" style="gap:12px">
+   <div><label class="lbl" for="en">F.I.Sh.</label><input id="en" class="inp" value="{{fld.en.v}}" onInput="{{fld.en.c}}"></div>
+   <div><label class="lbl" for="ep">Lavozim</label><input id="ep" class="inp" value="{{fld.ep.v}}" onInput="{{fld.ep.c}}"></div>
+   <div><label class="lbl" for="ed">Bo'lim</label><input id="ed" class="inp" value="{{fld.ed.v}}" onInput="{{fld.ed.c}}"></div>
+   <div><label class="lbl" for="eg">Ish guruhi</label><select id="eg" class="inp" value="{{fld.egroup.v}}" onChange="{{fld.egroup.c}}"><sc-for list="{{groupOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div>
+   <div><label class="lbl" for="eph">Telefon raqami</label><input id="eph" class="inp" value="{{fld.ephone.v}}" onInput="{{fld.ephone.c}}"></div>
+   <div><label class="lbl" for="eh">Ishga qabul qilingan sana</label><input id="eh" class="inp" value="{{fld.ehire.v}}" onInput="{{fld.ehire.c}}" placeholder="KK.OO.YYYY"></div>
+   <div style="grid-column:1/-1"><label class="lbl" for="eo">Biriktirilgan ish grafigi (xodimning o'ziga biriktirilgani asosiy hisoblanadi)</label><select id="eo" class="inp" value="{{fld.eover.v}}" onChange="{{fld.eover.c}}"><sc-for list="{{schedOptsEmp}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div>
+  </div>
+  <div class="row wrap" style="justify-content:flex-end"><button class="btn" onClick="{{h.toEmpList}}">Bekor qilish</button><button class="btn pri" onClick="{{h.empSave}}">Saqlash</button></div>
+ </div>
+ <div class="card col" style="flex:1 1 300px"><h2>Yuz tasvirlari</h2>
+  <div class="sm muted">Bir nechta sifatli tasvir ro'yxatdan o'tkazing: old, o'ng va chap burchak, turli yoritish.</div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"><sc-for list="{{slots}}" as="x" hint-placeholder-count="6"><button class="btn" style="aspect-ratio:1/1;flex-direction:column;border-style:dashed" onClick="{{h.addFace}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg><span class="sm">{{x}}</span></button></sc-for></div>
+  <label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" checked="{{consent}}" onChange="{{h.consent}}"><span class="sm">Xodimning biometrik ma'lumotlarni qayta ishlashga yozma roziligi olingan</span></label>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== GROUPS ===== -->
+<sc-if value="{{sc.aGroups}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap"><div class="muted" style="flex:1 1 300px">Grafik ierarxiyasi: umumiy grafik → guruh → alohida xodim. Guruhga biriktirilgan xodimlar grafikni avtomatik oladi; individual grafik istisno hisoblanadi.</div>
+ <input class="inp" style="flex:1 1 200px;max-width:260px" placeholder="Yangi guruh nomi" value="{{fld.gname.v}}" onInput="{{fld.gname.c}}" aria-label="Yangi guruh nomi"><button class="btn pri" onClick="{{h.grAdd}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg>Guruh yaratish</button></div>
+<div class="g2">
+ <sc-for list="{{grpCards}}" as="g" hint-placeholder-count="4">
+  <div class="card col"><div class="row"><h2>{{g.name}}</h2><span class="badge b-neutral" style="margin-left:auto">{{g.dept}}</span><button class="btn" style="min-height:32px;color:#B91C1C" onClick="{{g.del}}">O'chirish</button></div>
+   <div class="muted">{{g.count}} xodim</div>
+   <div class="row wrap" style="gap:4px"><sc-for list="{{g.members}}" as="m" hint-placeholder-count="3"><span class="av" style="background:{{m.col}}" title="{{m.name}}">{{m.init}}</span></sc-for></div>
+   <div><label class="lbl">Guruh grafigi</label><select class="inp" value="{{g.sched}}" onChange="{{g.setS}}" aria-label="Guruh grafigi"><sc-for list="{{g.opts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div>
+  </div>
+ </sc-for>
+</div>
+</sc-if>
+
+<!-- ===== SCHEDULES ===== -->
+<sc-if value="{{sc.aSched}}" hint-placeholder-val="{{false}}">
+<div class="g2" style="grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))">
+ <sc-for list="{{hier}}" as="x" hint-placeholder-count="3"><div class="card row" style="align-items:flex-start"><span class="av" style="background:var(--slate)">{{x.n}}</span><div><b>{{x.t}}</b><div class="sm muted">{{x.d}}</div><span class="badge b-neutral">{{x.c}}</span></div></div></sc-for>
+</div>
+<div class="row wrap" style="align-items:flex-start">
+ <div class="col" style="flex:1 1 280px;max-width:380px;min-width:0">
+  <button class="btn pri" onClick="{{h.schNew}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg>Yangi grafik yaratish</button>
+  <sc-for list="{{schList}}" as="x" hint-placeholder-count="4">
+   <button class="card col" style="gap:6px;text-align:left;cursor:pointer;color:inherit;{{x.cls}}" onClick="{{x.pick}}"><b>{{x.name}}</b><div class="row wrap" style="gap:6px"><span class="badge b-neutral">{{x.type}}</span><span class="badge b-{{x.lk}}">{{x.level}}</span></div><div class="sm muted">{{x.info}}</div></button>
+  </sc-for>
+ </div>
+ <div class="col" style="flex:3 1 520px;min-width:0">
+  <div class="card col">
+   <div class="row wrap"><h2>{{sd.name}}</h2><div class="row" style="margin-left:auto;gap:6px"><sc-for list="{{viewOpts}}" as="o" hint-placeholder-count="2"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for><button class="btn" onClick="{{h.schEdit}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.edit}}"/></svg>Tahrirlash</button><button class="btn" style="color:#B91C1C" onClick="{{h.schDel}}">O'chirish</button></div></div>
+   <div class="sm muted">Noyabr 2026 · grace period: {{grace}} daqiqa · tushlik/tanaffus: {{sd.brk}} daq</div>
+   <sc-if value="{{isCal}}" hint-placeholder-val="{{true}}">
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+     <sc-for list="{{wdNames}}" as="d" hint-placeholder-count="7"><div class="sm muted" style="text-align:center;font-weight:600">{{d}}</div></sc-for>
+     <sc-for list="{{cal}}" as="c" hint-placeholder-count="14"><div style="min-height:62px;border-radius:6px;padding:4px 6px;font-size:12px;{{c.st}}"><b>{{c.day}}</b><div>{{c.txt}}</div><div style="font-size:11px">{{c.sub}}</div></div></sc-for>
+    </div>
+    <div class="row wrap sm"><span class="badge b-info">Ish kuni</span><span class="badge b-neutral">Dam olish</span><span class="badge" style="background:#334155;color:#fff">Tungi smena (+1 kun)</span></div>
+   </sc-if>
+   <sc-if value="{{isTbl}}" hint-placeholder-val="{{false}}">
+    <div class="tw"><table class="t"><thead><tr><th>Sana</th><th>Kun</th><th>Ish vaqti</th><th>Sof soat</th><th>Izoh</th></tr></thead><tbody><sc-for list="{{tbl}}" as="r" hint-placeholder-count="6"><tr><td>{{r.date}}</td><td>{{r.wd}}</td><td>{{r.time}}</td><td>{{r.hrs}}</td><td>{{r.note}}</td></tr></sc-for></tbody></table></div>
+   </sc-if>
+  </div>
+  <div class="card col"><h2>Grafikni biriktirish</h2>
+   <div class="g2" style="gap:12px">
+    <div class="col" style="gap:8px"><label class="lbl" for="agrp">Guruhga (guruh xodimlari avtomatik oladi)</label><select id="agrp" class="inp" value="{{fld.agrp.v}}" onChange="{{fld.agrp.c}}"><sc-for list="{{groupOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select><button class="btn" onClick="{{h.asgG}}">Guruhga biriktirish</button></div>
+    <div class="col" style="gap:8px"><label class="lbl" for="aemp">Alohida xodimga (umumiy grafikdan istisno)</label><select id="aemp" class="inp" value="{{fld.aemp.v}}" onChange="{{fld.aemp.c}}"><sc-for list="{{empOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select><div class="row wrap" style="gap:8px"><button class="btn" onClick="{{h.asgE}}">Xodimga biriktirish</button><button class="btn" onClick="{{h.asgClear}}">Istisnoni olib tashlash</button></div></div>
+   </div>
+  </div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== SCHEDULE CREATE / EDIT ===== -->
+<sc-if value="{{sc.aSchedNew}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap" style="gap:6px"><span class="sm muted" style="font-weight:600">Grafik turi</span><sc-for list="{{typeTabs}}" as="o" hint-placeholder-count="5"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:2 1 480px;min-width:0">
+  <div class="g2" style="gap:12px"><div><label class="lbl" for="sn">Grafik nomi</label><input id="sn" class="inp" value="{{fld.sn.v}}" onInput="{{fld.sn.c}}" placeholder="Masalan: Ofis 5/2"></div><div><label class="lbl" for="sb">Tushlik / tanaffus (daqiqa)</label><input id="sb" class="inp" type="number" value="{{fld.sbrk.v}}" onInput="{{fld.sbrk.c}}"></div></div>
+  <sc-if value="{{nt.week}}" hint-placeholder-val="{{true}}">
+   <div class="row wrap" style="gap:6px"><span class="sm muted">Tezkor:</span><button class="chip" onClick="{{h.pre5}}">Dushanba–Juma</button><button class="chip" onClick="{{h.pre6}}">Dushanba–Shanba</button></div>
+   <div class="tw"><table class="t"><thead><tr><th>Kun</th><th>Ishlaydi</th><th>Boshlanishi</th><th>Tugashi</th></tr></thead><tbody>
+    <sc-for list="{{wkRows}}" as="r" hint-placeholder-count="7"><tr><td><b>{{r.d}}</b></td><td><input type="checkbox" checked="{{r.on}}" onChange="{{r.tg}}" aria-label="{{r.d}} ishlaydi"></td><td><input class="inp" style="max-width:130px" type="time" value="{{r.s}}" onInput="{{r.sc}}" aria-label="{{r.d}} boshlanishi"></td><td><input class="inp" style="max-width:130px" type="time" value="{{r.e}}" onInput="{{r.ec}}" aria-label="{{r.d}} tugashi"></td></tr></sc-for>
+   </tbody></table></div>
+  </sc-if>
+  <sc-if value="{{nt.ind}}" hint-placeholder-val="{{false}}">
+   <div class="g2" style="gap:12px"><div><label class="lbl" for="se">Xodim</label><select id="se" class="inp" value="{{fld.sEmp.v}}" onChange="{{fld.sEmp.c}}"><sc-for list="{{empOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div><div><label class="lbl" for="sr">Turi</label><select id="sr" class="inp" value="{{fld.sreason.v}}" onChange="{{fld.sreason.c}}"><option value="Vaqtinchalik">Vaqtinchalik o'zgartirish</option><option value="Doimiy">Doimiy individual grafik</option></select></div><div><label class="lbl" for="sf">Boshlanish sanasi</label><input id="sf" class="inp" value="{{fld.sfrom.v}}" onInput="{{fld.sfrom.c}}"></div><div><label class="lbl" for="st">Tugash sanasi</label><input id="st" class="inp" value="{{fld.sto.v}}" onInput="{{fld.sto.c}}" placeholder="doimiy bo'lsa bo'sh"></div></div>
+   <div class="sm muted">Haftaning turli kunlarida turli ish soatlarini yuqoridagi jadvalda belgilang (Haftalik tabida). Hisob-kitobda xodimning o'ziga biriktirilgan grafik asosiy hisoblanadi.</div>
+  </sc-if>
+  <sc-if value="{{nt.shift}}" hint-placeholder-val="{{false}}">
+   <div class="g2" style="gap:10px"><sc-for list="{{smenas}}" as="x" hint-placeholder-count="3"><div class="card col" style="gap:4px;background:var(--s2)"><b>{{x.n}}</b><div style="font-size:20px;font-weight:700;font-family:'Space Grotesk'">{{x.t}}</div><div class="sm muted">{{x.d}}</div></div></sc-for></div>
+   <div><label class="lbl" for="so">Shu hafta boshlanadigan smena (haftalik aylanish)</label><select id="so" class="inp" value="{{fld.soff.v}}" onChange="{{fld.soff.c}}"><option value="0">1-smena → 2-smena → 3-smena</option><option value="1">2-smena → 3-smena → 1-smena</option><option value="2">3-smena → 1-smena → 2-smena</option></select></div>
+   <div class="ban b-info">Tungi smena: 22:00 → 06:00 (+1 kun). Kirish 21:50 dan, chiqish ertasi 06:30 gacha shu smenaga hisoblanadi va ish vaqti ikki sanaga bo'linmaydi.</div>
+  </sc-if>
+  <sc-if value="{{nt.cycle}}" hint-placeholder-val="{{false}}">
+   <div class="g2" style="gap:12px"><div><label class="lbl" for="sd">Boshlanish sanasi (noyabr kuni)</label><input id="sd" class="inp" type="number" min="1" max="30" value="{{fld.sday.v}}" onInput="{{fld.sday.c}}"></div><div class="row" style="align-items:flex-end"><span class="badge b-info">{{cycleTxt}}</span></div><div><label class="lbl" for="ss">Ish boshlanishi</label><input id="ss" class="inp" type="time" value="{{fld.sstart.v}}" onInput="{{fld.sstart.c}}"></div><div><label class="lbl" for="sx">Ish tugashi</label><input id="sx" class="inp" type="time" value="{{fld.send.v}}" onInput="{{fld.send.c}}"></div></div>
+  </sc-if>
+  <div class="row wrap" style="justify-content:flex-end"><button class="btn" onClick="{{h.toSched}}">Bekor qilish</button><button class="btn pri" onClick="{{h.schSave}}">Grafikni saqlash</button></div>
+ </div>
+ <div class="card col" style="flex:1 1 300px;min-width:0"><h2>Oldindan ko'rish — 9–22 noyabr</h2>
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px"><sc-for list="{{prev}}" as="c" hint-placeholder-count="14"><div style="border-radius:6px;padding:4px;text-align:center;font-size:11px;{{c.st}}"><b>{{c.d}}</b><div>{{c.txt}}</div></div></sc-for></div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== ATTENDANCE ===== -->
+<sc-if value="{{sc.aAtt}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap">
+ <div class="row" style="gap:6px"><sc-for list="{{dayOpts}}" as="o" hint-placeholder-count="2"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+ <input class="inp" style="flex:1 1 200px;max-width:260px" placeholder="Xodim qidirish" value="{{fld.aq.v}}" onInput="{{fld.aq.c}}" aria-label="Xodim qidirish">
+ <select class="inp" style="max-width:200px" value="{{attDept}}" onChange="{{h.attDept}}" aria-label="Bo'lim"><sc-for list="{{deptNames}}" as="d" hint-placeholder-count="3"><option value="{{d}}">{{d}}</option></sc-for></select>
+ <span class="sm muted" style="margin-left:auto">Grace period: {{grace}} daq</span>
+</div>
+<div class="row wrap" style="gap:6px"><sc-for list="{{attChips}}" as="o" hint-placeholder-count="7"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}} · {{o.n}}</button></sc-for></div>
+<div class="card tw"><table class="t"><thead><tr><th>Xodim</th><th>Bo'lim</th><th>Grafik</th><th>Reja</th><th>Kirish</th><th>Chiqish</th><th>Kirish holati</th><th>Chiqish holati</th></tr></thead><tbody>
+ <sc-for list="{{attRows}}" as="r" hint-placeholder-count="6"><tr><td><b>{{r.name}}</b></td><td>{{r.dept}}</td><td>{{r.sched}}</td><td>{{r.plan}}</td><td>{{r.arr}}</td><td>{{r.lev}}</td><td><span class="badge b-{{r.ik}}">{{r.it}}</span></td><td><span class="badge b-{{r.ok}}">{{r.ot}}</span></td></tr></sc-for>
+</tbody></table></div>
+</sc-if>
+
+<!-- ===== MANAGER DASHBOARD ===== -->
+<sc-if value="{{sc.mDash}}" hint-placeholder-val="{{false}}">
+<div class="kp"><sc-for list="{{mKpis}}" as="k" hint-placeholder-count="5"><div class="card col" style="gap:4px"><div class="sm muted" style="font-weight:600">{{k.l}}</div><div style="font-family:'Space Grotesk';font-size:30px;font-weight:700">{{k.v}}</div><span class="badge b-{{k.k}}" style="align-self:flex-start">{{k.sub}}</span></div></sc-for></div>
+<div class="g2">
+ <div class="card col"><h2>Kechikkanlar va erta ketganlar</h2><sc-for list="{{mLate}}" as="r" hint-placeholder-count="4"><div class="row"><b style="flex:1">{{r.name}}</b><span class="badge b-{{r.k}}">{{r.t}}</span></div></sc-for></div>
+ <div class="card col"><h2>Kirib-chiqqan avtomobillar</h2><sc-for list="{{mCars}}" as="r" hint-placeholder-count="3"><div class="row"><span class="sm muted">{{r.t}}</span><div style="flex:1">{{r.txt}}</div><span class="badge b-{{r.k}}">{{r.tag}}</span></div></sc-for></div>
+</div>
+<div class="card col"><h2>Muhim xavfsizlik hodisalari</h2><sc-for list="{{mSec}}" as="r" hint-placeholder-count="3"><div class="row"><span class="sm muted">{{r.t}}</span><div style="flex:1">{{r.txt}}</div><span class="badge b-{{r.k}}">{{r.tag}}</span></div></sc-for>
+ <div class="row wrap"><button class="btn" onClick="{{h.toAtt}}">Bugungi davomat</button><button class="btn pri" onClick="{{h.toRep}}">Hisobotlar</button></div></div>
+</sc-if>
+
+<!-- ===== CAMERA MANAGEMENT ===== -->
+<sc-if value="{{sc.aCams}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap">
+ <div class="row wrap" style="gap:6px"><sc-for list="{{areaOpts}}" as="o" hint-placeholder-count="4"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+ <div class="row wrap" style="margin-left:auto;gap:8px"><button class="btn" onClick="{{h.toCams}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.video}}"/></svg>Multi-kamera monitoring</button><button class="btn pri" onClick="{{h.toCamNew}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.plus}}"/></svg>Kamera qo'shish</button></div>
+</div>
+<div class="card tw"><table class="t"><thead><tr><th>Kamera</th><th>Hudud</th><th>IP manzil</th><th>AI funksiyalari</th><th>Oqim</th><th>Paket yo'qotish</th><th>Yozuv</th><th>Holat</th><th></th></tr></thead><tbody>
+ <sc-for list="{{camRows}}" as="c" hint-placeholder-count="6"><tr><td><b>{{c.name}}</b><div class="sm muted">{{c.loc}}</div></td><td>{{c.area}}</td><td>{{c.ip}}</td><td>{{c.ai}}</td><td>{{c.bit}}</td><td>{{c.loss}}</td><td><span class="badge b-{{c.recK}}">{{c.rec}}</span></td><td><span class="badge b-{{c.k}}">{{c.st}}</span></td><td><div class="row" style="gap:6px"><button class="btn" style="min-height:32px" onClick="{{c.edit}}">Sozlash</button><button class="btn" style="min-height:32px;color:#B91C1C" onClick="{{c.del}}">O'chirish</button></div></td></tr></sc-for>
+</tbody></table></div>
+</sc-if>
+
+<!-- ===== CAMERA ADD / EDIT ===== -->
+<sc-if value="{{sc.aCamEdit}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:2 1 480px;min-width:0">
+  <h2>Kamera ma'lumotlari</h2>
+  <div class="g2" style="gap:12px">
+   <div><label class="lbl" for="cn">Kamera nomi</label><input id="cn" class="inp" value="{{fld.cn.v}}" onInput="{{fld.cn.c}}"></div>
+   <div><label class="lbl" for="cip">IP manzil</label><input id="cip" class="inp" value="{{fld.cip.v}}" onInput="{{fld.cip.c}}" placeholder="192.168.10.xx"></div>
+   <div style="grid-column:1/-1"><label class="lbl" for="crt">RTSP URL</label><input id="crt" class="inp" value="{{fld.crtsp.v}}" onInput="{{fld.crtsp.c}}" placeholder="rtsp://IP:554/stream1"></div>
+   <div><label class="lbl" for="clg">Login</label><input id="clg" class="inp" value="{{fld.clog.v}}" onInput="{{fld.clog.c}}" autocomplete="off"></div>
+   <div><label class="lbl" for="cps">Parol</label><input id="cps" class="inp" type="password" value="{{fld.cpass.v}}" onInput="{{fld.cpass.c}}" autocomplete="new-password"></div>
+   <div><label class="lbl" for="cty">Kamera turi</label><select id="cty" class="inp" value="{{fld.ctype.v}}" onChange="{{fld.ctype.c}}"><option>Statsionar (fixed)</option><option>PTZ</option><option>Panoramik</option></select></div>
+   <div><label class="lbl" for="car">Hudud</label><select id="car" class="inp" value="{{fld.carea.v}}" onChange="{{fld.carea.c}}"><sc-for list="{{areaNames}}" as="a" hint-placeholder-count="4"><option value="{{a}}">{{a}}</option></sc-for></select></div>
+  </div>
+  <div><span class="lbl">Nuqta turi</span><div class="row wrap" style="gap:6px"><sc-for list="{{dirOpts}}" as="o" hint-placeholder-count="3"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+  <div><span class="lbl">AI funksiyalari</span><div class="row wrap" style="gap:6px"><sc-for list="{{aiOpts}}" as="o" hint-placeholder-count="5"><button class="chip {{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+  <div class="g2" style="gap:12px"><div><label class="lbl" for="crc">Yozib olish rejimi</label><select id="crc" class="inp" value="{{fld.crec.v}}" onChange="{{fld.crec.c}}"><option>Doimiy yozuv</option><option>Hodisa bo'yicha</option><option>Jadval bo'yicha</option></select></div><div><label class="lbl" for="cdy">Saqlash muddati (kun)</label><select id="cdy" class="inp" value="{{fld.cdays.v}}" onChange="{{fld.cdays.c}}"><option>7</option><option>14</option><option>30</option><option>60</option></select></div></div>
+  <div class="row wrap" style="justify-content:flex-end"><button class="btn" onClick="{{h.toCamList}}">Bekor qilish</button><button class="btn pri" onClick="{{h.camSave}}">Saqlash</button></div>
+ </div>
+ <div class="card col" style="flex:1 1 300px;min-width:0"><h2>ONVIF orqali aniqlash</h2>
+  <div class="sm muted">Tarmoqdagi ONVIF qurilmalarini qidiradi. Demo: natijalar simulyatsiya.</div>
+  <button class="btn" onClick="{{h.onvif}}">{{onvifBtn}}</button>
+  <sc-for list="{{onvifList}}" as="d" hint-placeholder-count="0"><div class="row" style="padding:8px;border:1px solid var(--border);border-radius:6px"><div style="flex:1"><b>{{d.n}}</b><div class="sm muted">{{d.ip}}</div></div><button class="btn" style="min-height:32px" onClick="{{d.pick}}">Tanlash</button></div></sc-for>
+  <div class="ban b-info">Yangi kamera saqlanganda multi-kamera monitoringda avtomatik yangi video blok yaratiladi.</div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== MAP ===== -->
+<sc-if value="{{sc.aMap}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:3 1 560px;min-width:0">
+  <div class="row wrap"><h2>Korxona hududi — kameralar xaritasi</h2><div style="margin-left:auto;min-width:220px"><select class="inp" value="{{mapEmp}}" onChange="{{h.mapEmp}}" aria-label="Xodim"><sc-for list="{{empOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div></div>
+  <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+   <sc-for list="{{zones}}" as="z" hint-placeholder-count="6"><div style="position:absolute;border-radius:6px;font-size:11px;font-weight:600;padding:4px 6px;{{z.st}}">{{z.name}}</div></sc-for>
+   <sc-for list="{{pins}}" as="p" hint-placeholder-count="6"><button type="button" style="position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #fff;padding:0;cursor:pointer;transform:translate(-50%,-50%);{{p.st}}" aria-label="{{p.name}}" onClick="{{p.pick}}"></button></sc-for>
+   <sc-if value="{{mk.show}}" hint-placeholder-val="{{false}}"><span class="av" style="position:absolute;transform:translate(-50%,-50%);width:36px;height:36px;box-shadow:0 0 0 4px rgba(37,99,235,.35);background:{{mk.col}};{{mk.st}}">{{mk.init}}</span></sc-if>
+  </div>
+  <div class="row wrap sm"><span class="row" style="gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:#16A34A"></span>Kamera onlayn</span><span class="row" style="gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:#DC2626"></span>Aloqa yo'q</span><span class="row" style="gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></span>Xodimning oxirgi aniqlangan hududi</span></div>
+  <div class="ban b-info">Tizim xodimning aniq koordinatasini emas, kameralar orqali qayd etilgan oxirgi aniqlangan hududini ko'rsatadi.</div>
+ </div>
+ <div class="col" style="flex:1 1 280px;min-width:0">
+  <div class="card col"><h2>{{mk.name}}</h2><div class="muted">{{mk.last}}</div>
+   <div class="col" style="gap:8px"><sc-for list="{{mapSeq}}" as="x" hint-placeholder-count="4"><div class="row"><b>{{x.t}}</b><div style="flex:1">{{x.cam}}</div><span class="badge b-{{x.k}}">{{x.conf}}%</span></div></sc-for></div>
+   <sc-if value="{{mk.none}}" hint-placeholder-val="{{false}}"><div class="sm muted">Bugun aniqlanmagan.</div></sc-if>
+  </div>
+  <sc-if value="{{pinInfo.show}}" hint-placeholder-val="{{false}}"><div class="card col"><h2>{{pinInfo.name}}</h2><div class="muted">{{pinInfo.loc}}</div><div class="row"><span class="badge b-{{pinInfo.k}}">{{pinInfo.st}}</span><span class="sm muted">{{pinInfo.ai}}</span></div></div></sc-if>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== FACE SEARCH ===== -->
+<sc-if value="{{sc.aFace}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:1 1 300px;max-width:400px;min-width:0">
+  <input class="inp" placeholder="F.I.Sh. bo'yicha qidirish" value="{{fld.fq.v}}" onInput="{{fld.fq.c}}" aria-label="Xodim qidirish">
+  <button class="btn" style="border-style:dashed;min-height:64px" onClick="{{h.faceImg}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.upload}}"/></svg>Yuz tasvirini yuklab qidirish (demo)</button>
+  <sc-for list="{{faceList}}" as="r" hint-placeholder-count="5"><button class="row" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;text-align:left;{{r.st}}" onClick="{{r.pick}}"><span class="av" style="background:{{r.col}}">{{r.init}}</span><span style="flex:1"><b>{{r.name}}</b><br><span class="sm muted">{{r.last}}</span></span></button></sc-for>
+ </div>
+ <div class="col" style="flex:2 1 460px;min-width:0">
+  <div class="card col"><div class="row" style="gap:14px;align-items:flex-start"><div style="width:96px;height:96px;border-radius:10px;background:#1E293B;color:#fff;display:flex;align-items:center;justify-content:center"><svg class="i" style="width:44px;height:44px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.face}}"/></svg></div>
+    <div style="flex:1"><h2>{{fe.name}}</h2><div class="muted">{{fe.pos}}</div><div class="row wrap" style="margin-top:8px"><span class="badge b-{{fe.k}}">{{fe.state}}</span></div></div></div>
+   <sc-if value="{{fe.has}}" hint-placeholder-val="{{true}}"><div class="g2" style="gap:10px"><div><div class="sm muted">Oxirgi aniqlangan vaqt</div><b>{{fe.t}}</b></div><div><div class="sm muted">Kamera</div><b>{{fe.cam}}</b></div><div><div class="sm muted">Hudud</div><b>{{fe.area}}</b></div><div><div class="sm muted">Ishonchlilik</div><b>{{fe.conf}}% (chegara {{thr}}%)</b></div></div>
+    <div style="height:10px;background:var(--nbg);border-radius:6px"><div style="height:10px;border-radius:6px;background:{{fe.bar}};width:{{fe.conf}}%"></div></div></sc-if>
+   <sc-if value="{{fe.review}}" hint-placeholder-val="{{false}}"><div class="ban b-warn" style="flex-wrap:wrap">Ishonchlilik chegaradan past — tasdiqlangan shaxs sifatida ko'rsatilmaydi. Operator tekshiruvi kerak.<span class="row" style="margin-left:auto;gap:6px"><button class="btn pri" style="min-height:34px" onClick="{{fe.ok}}">Tasdiqlash</button><button class="btn" style="min-height:34px" onClick="{{fe.no}}">Rad etish</button></span></div></sc-if>
+   <sc-if value="{{fe.none}}" hint-placeholder-val="{{false}}"><div class="muted">Bugun yuz bo'yicha aniqlanmagan.</div></sc-if>
+  </div>
+  <div class="card col"><h2>Oldingi aniqlanishlar tarixi</h2>
+   <div class="tw"><table class="t"><thead><tr><th>Vaqt</th><th>Kamera</th><th>Hudud</th><th>Ishonchlilik</th><th>Holat</th></tr></thead><tbody><sc-for list="{{fe.hist}}" as="x" hint-placeholder-count="5"><tr><td>{{x.t}}</td><td>{{x.cam}}</td><td>{{x.area}}</td><td>{{x.conf}}%</td><td><span class="badge b-{{x.k}}">{{x.state}}</span></td></tr></sc-for></tbody></table></div>
+  </div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== ANPR ===== -->
+<sc-if value="{{sc.aAnpr}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap"><div class="row wrap" style="gap:6px"><sc-for list="{{anprTabs}}" as="o" hint-placeholder-count="3"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div><input class="inp" style="flex:1 1 200px;max-width:280px;margin-left:auto" placeholder="Davlat raqami bo'yicha qidirish" value="{{fld.pq.v}}" onInput="{{fld.pq.c}}" aria-label="Raqam qidirish"></div>
+<sc-if value="{{anpr.ev}}" hint-placeholder-val="{{true}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card tw" style="flex:2 1 520px;min-width:0"><table class="t"><thead><tr><th>Davlat raqami</th><th>Vaqt</th><th>Yo'nalish</th><th>Kamera</th><th>Egasi / xodim</th><th>Holat</th></tr></thead><tbody>
+  <sc-for list="{{anpr.rows}}" as="r" hint-placeholder-count="5"><tr><td><button class="lnk" onClick="{{r.pick}}"><span style="display:inline-flex;border:2px solid #172337;border-radius:4px;background:#fff;color:#111;font-weight:700;padding:1px 8px;letter-spacing:.06em;font-family:'Space Grotesk'">{{r.plate}}</span></button></td><td>{{r.t}}</td><td><span class="badge b-{{r.dk}}">{{r.dir}}</span></td><td>{{r.cam}}</td><td>{{r.who}}</td><td><span class="badge b-{{r.k}}">{{r.st}}</span></td></tr></sc-for>
+ </tbody></table></div>
+ <div class="card col" style="flex:1 1 300px;min-width:0"><div style="aspect-ratio:16/9;border-radius:8px;background:linear-gradient(160deg,#243044,#0b111a);display:flex;align-items:center;justify-content:center;color:#fff"><svg class="i" style="width:48px;height:48px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.car}}"/></svg></div>
+  <div><span style="display:inline-flex;border:2px solid #172337;border-radius:4px;background:#fff;color:#111;font-weight:700;padding:2px 10px;font-size:20px;letter-spacing:.06em;font-family:'Space Grotesk'">{{anpr.sel.plate}}</span></div>
+  <div class="row wrap"><span class="badge b-{{anpr.sel.k}}">{{anpr.sel.st}}</span><span class="badge b-{{anpr.sel.dk}}">{{anpr.sel.dir}} · {{anpr.sel.t}}</span></div>
+  <div class="sm muted">Egasi: <b style="color:var(--text)">{{anpr.sel.who}}</b> · {{anpr.sel.cam}}</div>
+  <sc-if value="{{anpr.sel.unknown}}" hint-placeholder-val="{{false}}"><div class="ban b-warn">Ro'yxatda yo'q avtomobil. Bu xavfli degani emas — operator tekshiruvi kerak.</div><div class="row wrap"><button class="btn" onClick="{{h.anprCheck}}">Operator tekshiruvi</button><button class="btn pri" onClick="{{h.anprAllow}}">Ruxsat ro'yxatiga qo'shish</button></div></sc-if>
+ </div>
+</div></sc-if>
+<sc-if value="{{anpr.allow}}" hint-placeholder-val="{{false}}"><div class="card tw"><table class="t"><thead><tr><th>Davlat raqami</th><th>Egasi (xodimga bog'langan)</th><th>Turi</th><th>Amal qilish muddati</th></tr></thead><tbody><sc-for list="{{anpr.allowRows}}" as="r" hint-placeholder-count="5"><tr><td><b>{{r.plate}}</b></td><td>{{r.who}}</td><td>{{r.type}}</td><td>{{r.until}}</td></tr></sc-for></tbody></table></div></sc-if>
+<sc-if value="{{anpr.stats}}" hint-placeholder-val="{{false}}"><div class="kp"><sc-for list="{{anpr.kpis}}" as="k" hint-placeholder-count="4"><div class="card col" style="gap:4px"><div class="sm muted" style="font-weight:600">{{k.l}}</div><div style="font-family:'Space Grotesk';font-size:28px;font-weight:700">{{k.v}}</div></div></sc-for></div><div class="sm muted">Demo ma'lumotlar. Statistika kamera hodisalaridan hisoblanadi.</div></sc-if>
+</sc-if>
+
+<!-- ===== REPORTS ===== -->
+<sc-if value="{{sc.aReports}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="card col" style="flex:1 1 240px;max-width:300px;min-width:0;gap:6px"><h2>Hisobotlar</h2>
+  <sc-for list="{{repList}}" as="r" hint-placeholder-count="10"><button class="nv {{r.cls}}" style="color:var(--text);min-height:36px" onClick="{{r.pick}}">{{r.n}}. {{r.name}}</button></sc-for>
+ </div>
+ <div class="col" style="flex:3 1 560px;min-width:0">
+  <div class="card row wrap"><h2>{{rp.title}}</h2><select class="inp" style="max-width:200px" value="{{repDept}}" onChange="{{h.repDept}}" aria-label="Bo'lim"><sc-for list="{{deptNames}}" as="d" hint-placeholder-count="3"><option value="{{d}}">{{d}}</option></sc-for></select>
+   <div class="row wrap" style="margin-left:auto;gap:8px"><button class="btn" onClick="{{h.expPdf}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.dl}}"/></svg>PDF</button><button class="btn" onClick="{{h.expXls}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.dl}}"/></svg>Excel</button></div></div>
+  <sc-if value="{{exp.show}}" hint-placeholder-val="{{false}}"><div class="card col" style="gap:8px"><div class="row"><b>{{exp.txt}}</b></div><div style="height:8px;background:var(--nbg);border-radius:6px"><div style="height:8px;border-radius:6px;background:var(--accent);width:{{exp.pct}}%"></div></div></div></sc-if>
+  <div class="card tw"><table class="t"><thead><tr><sc-for list="{{rp.cols}}" as="c" hint-placeholder-count="6"><th>{{c}}</th></sc-for></tr></thead><tbody>
+   <sc-for list="{{rp.rows}}" as="r" hint-placeholder-count="6"><tr><td><button class="lnk" onClick="{{r.pick}}">{{r.first}}</button></td><sc-for list="{{r.rest}}" as="c" hint-placeholder-count="5"><td>{{c}}</td></sc-for></tr></sc-for>
+  </tbody></table><div class="sm muted" style="padding:8px 12px">{{rp.note}}</div></div>
+  <sc-if value="{{rpe.show}}" hint-placeholder-val="{{false}}"><div class="card col"><div class="row"><h2>{{rpe.name}}</h2><span class="badge b-neutral">{{rpe.sched}}</span></div>
+   <div class="row wrap" style="gap:24px"><div><div class="sm muted">Oylik davomat</div><b style="font-size:24px;font-family:'Space Grotesk'">{{rpe.pct}}%</b></div><div><div class="sm muted">Kechikishlar</div><b>{{rpe.late}} marta</b></div><div><div class="sm muted">Kelmagan kunlar</div><b>{{rpe.abs}}</b></div></div>
+   <div class="tw"><table class="t"><thead><tr><th>Sana</th><th>Grafik</th><th>Haqiqiy kirish</th><th>Haqiqiy chiqish</th><th>Holat</th></tr></thead><tbody><sc-for list="{{rpe.days}}" as="d" hint-placeholder-count="2"><tr><td>{{d.d}}</td><td>{{d.plan}}</td><td>{{d.arr}}</td><td>{{d.lev}}</td><td><span class="badge b-{{d.k}}">{{d.st}}</span></td></tr></sc-for></tbody></table></div>
+   <div class="col" style="gap:6px"><div class="sm muted">Grafik bilan taqqoslash: reja {{rpe.planH}} soat / haqiqiy {{rpe.realH}} soat</div><div style="height:10px;background:var(--nbg);border-radius:6px"><div style="height:10px;border-radius:6px;background:var(--ok);width:{{rpe.pct}}%"></div></div></div></div></sc-if>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== USERS ===== -->
+<sc-if value="{{sc.aUsers}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="col" style="flex:2 1 520px;min-width:0">
+  <div class="card tw"><table class="t"><thead><tr><th>Login</th><th>F.I.Sh.</th><th>Rol</th><th>2FA</th><th>Oxirgi kirish</th><th>Holat</th><th></th></tr></thead><tbody><sc-for list="{{users}}" as="u" hint-placeholder-count="4"><tr><td><b>{{u.login}}</b></td><td>{{u.name}}</td><td>{{u.role}}</td><td><span class="badge b-{{u.tk}}">{{u.tw}}</span></td><td>{{u.last}}</td><td><span class="badge b-ok">{{u.st}}</span></td><td><button class="btn" style="min-height:32px;color:#B91C1C" onClick="{{u.del}}">O'chirish</button></td></tr></sc-for></tbody></table></div>
+  <div class="card col"><h2>Rollar va ruxsatlar</h2><div class="tw"><table class="t"><thead><tr><th>Modul</th><th>Qorovul</th><th>Administrator</th><th>Mas'ul shaxs</th></tr></thead><tbody><sc-for list="{{matrix}}" as="r" hint-placeholder-count="6"><tr><td>{{r.m}}</td><td>{{r.a}}</td><td>{{r.b}}</td><td>{{r.c}}</td></tr></sc-for></tbody></table></div></div>
+  <div class="card col"><h2>Faol sessiyalar</h2><sc-for list="{{sessions}}" as="x" hint-placeholder-count="3"><div class="row"><div style="flex:1"><b>{{x.u}}</b><div class="sm muted">{{x.dev}} · {{x.since}} dan</div></div><button class="btn" style="min-height:32px" onClick="{{x.kill}}">Tugatish</button></div></sc-for></div>
+ </div>
+ <div class="card col" style="flex:1 1 300px;min-width:0"><h2>Foydalanuvchi yaratish</h2>
+  <div class="sm muted">Login va parollarni faqat administrator yaratadi. Parol xeshlangan holda saqlanadi.</div>
+  <div><label class="lbl" for="un">F.I.Sh.</label><input id="un" class="inp" value="{{fld.uname.v}}" onInput="{{fld.uname.c}}"></div>
+  <div><label class="lbl" for="ul">Login</label><input id="ul" class="inp" value="{{fld.ulogin.v}}" onInput="{{fld.ulogin.c}}" autocomplete="off"></div>
+  <div><label class="lbl" for="ur">Rol</label><select id="ur" class="inp" value="{{fld.urole.v}}" onChange="{{fld.urole.c}}"><option value="guard">Qorovul</option><option value="admin">Administrator</option><option value="manager">Mas'ul shaxs</option></select></div>
+  <div><label class="lbl" for="up">Boshlang'ich parol</label><div class="row" style="gap:8px"><input id="up" class="inp" value="{{fld.upass.v}}" onInput="{{fld.upass.c}}"><button class="btn" onClick="{{h.genPass}}">Yaratish</button></div></div>
+  <button class="btn pri" onClick="{{h.userAdd}}">Foydalanuvchi qo'shish</button>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== AUDIT ===== -->
+<sc-if value="{{sc.aAudit}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap" style="gap:6px"><sc-for list="{{auditChips}}" as="o" hint-placeholder-count="6"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+<div class="card tw"><table class="t"><thead><tr><th>Vaqt</th><th>Foydalanuvchi</th><th>Toifa</th><th>Harakat</th><th>Natija</th></tr></thead><tbody><sc-for list="{{auditRows}}" as="r" hint-placeholder-count="6"><tr><td>{{r.t}}</td><td>{{r.u}}</td><td>{{r.cat}}</td><td>{{r.text}}</td><td><span class="badge b-{{r.k}}">{{r.res}}</span></td></tr></sc-for></tbody></table></div>
+<div class="sm muted">Shlagbaum buyruqlari, video yozuvlarni ko'rish va eksport qilish, ruxsatsiz kirish urinishlari va sozlamalar o'zgarishi o'chirib bo'lmaydigan jurnalga yoziladi.</div>
+</sc-if>
+
+<!-- ===== SETTINGS ===== -->
+<sc-if value="{{sc.aSettings}}" hint-placeholder-val="{{false}}">
+<div class="g2">
+ <div class="card col"><h2>Davomat hisobi</h2>
+  <div><label class="lbl" for="gr">Kechikish uchun ruxsat etilgan daqiqalar (grace period)</label><input id="gr" class="inp" type="number" min="0" max="60" value="{{grace}}" onInput="{{h.grace}}"></div>
+  <div class="sm muted">O'zgartirsangiz, davomat monitoringidagi holatlar darhol qayta hisoblanadi.</div></div>
+ <div class="card col"><h2>Yuz tanish</h2>
+  <div><label class="lbl" for="ft">Ishonchlilik chegarasi: {{thr}}%</label><input id="ft" type="range" min="60" max="99" value="{{thr}}" onChange="{{h.faceThr}}" style="width:100%"></div>
+  <div class="sm muted">Chegaradan past natija tasdiqlangan shaxs sifatida ko'rsatilmaydi.</div>
+  <sc-for list="{{togs}}" as="t" hint-placeholder-count="3"><div class="row"><span style="flex:1">{{t.l}}</span><button role="switch" aria-checked="{{t.on}}" aria-label="{{t.l}}" class="btn" style="width:56px;padding:0;{{t.st}}" onClick="{{t.pick}}">{{t.txt}}</button></div></sc-for></div>
+ <div class="card col"><h2>Arxitektura va sinxronlash</h2>
+  <sc-for list="{{arch}}" as="a" hint-placeholder-count="5"><div class="row"><b style="min-width:150px">{{a.n}}</b><span class="sm muted" style="flex:1">{{a.d}}</span><span class="badge b-{{a.k}}">{{a.s}}</span></div></sc-for>
+  <div class="row wrap"><span class="sm muted" style="flex:1">Kutilayotgan hodisalar: <b>{{pend}}</b></span><button class="btn" onClick="{{h.sync}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.sync}}"/></svg>Qo'lda sinxronlash</button></div></div>
+ <div class="card col"><h2>Shlagbaum kontrolleri</h2><sc-for list="{{hw}}" as="x" hint-placeholder-count="4"><div class="row"><span style="flex:1">{{x.l}}</span><span class="badge b-{{x.k}}">{{x.v}}</span></div></sc-for>
+  <div><label class="lbl" for="ad">Video arxivni saqlash (kun)</label><select id="ad" class="inp" value="{{arcDays}}" onChange="{{h.arcDays}}"><option>14</option><option>30</option><option>60</option><option>90</option></select></div></div>
+ <div class="card col" style="grid-column:1/-1"><h2>Maxfiylik va huquqiy talablar</h2>
+  <div class="muted">Biometrik shablonlar shifrlangan holda alohida omborda saqlanadi, ochiq bazada emas. Xodimning yozma roziligi va huquqiy asos talab qilinadi. Noma'lum shaxs avtomatik ravishda xavfli deb belgilanmaydi. Yuzni tanishdagi xatolar inson tomonidan tasdiqlanadi. Video ko'rish va eksport audit logga yoziladi.</div></div>
+</div>
+</sc-if>
+
+<!-- ===== PLAYER ===== -->
+<sc-if value="{{sc.gPlayer}}" hint-placeholder-val="{{false}}">
+<div class="row wrap" style="align-items:flex-start">
+ <div class="col" style="flex:3 1 560px;min-width:0">
+  <div class="card col" style="background:#0F1724;border-color:#0F1724;color:#fff">
+   <div class="row wrap"><b style="font-size:15px">{{pv.name}}</b><span class="sm" style="color:#B8C4D6">{{pv.loc}}</span><span class="badge" style="background:{{pv.modeBg}};color:#fff">{{pv.mode}}</span><span class="sm" style="color:#B8C4D6">DEMO tasvir</span>
+    <span class="row" style="margin-left:auto;gap:6px"><button class="btn" style="min-height:34px;background:{{pv.syncBg}};color:#fff;border-color:#475569" aria-pressed="{{pv.sync}}" onClick="{{h.sync2}}">Sinxron ko'rish (4 kamera)</button><button class="btn" style="min-height:34px;background:#1E293B;color:#fff;border-color:#475569" onClick="{{h.popout}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.popout}}"/></svg>Alohida oyna</button></span></div>
+   <sc-if value="{{pv.single}}" hint-placeholder-val="{{true}}">
+    <div class="cam" style="{{pv.style}};cursor:default"><span class="scn"></span><span class="wm">DEMO</span>
+     <span class="bx" style="{{pv.box}}"><span>{{pv.boxLbl}}</span></span>
+     <span class="hud tl"><span class="pl">{{pv.name}}</span></span><span class="hud tr"><span class="pl" style="background:{{pv.modeBg}}">{{pv.mode}}</span><span class="pl">{{pv.speedTxt}}</span></span>
+     <span class="hud bl"><span class="pl">10.11.2026 {{pv.time}}</span></span><span class="hud br"><span class="pl">{{pv.q}} · {{pv.ai}}</span></span></div>
+   </sc-if>
+   <sc-if value="{{pv.multi}}" hint-placeholder-val="{{false}}">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px"><sc-for list="{{pv.syncCams}}" as="c" hint-placeholder-count="4"><div class="cam" style="{{c.style}};cursor:default"><span class="scn"></span><span class="hud tl"><span class="pl">{{c.name}}</span></span><span class="hud bl"><span class="pl">{{pv.time}}</span></span></div></sc-for></div>
+   </sc-if>
+   <div class="row wrap" style="gap:6px">
+    <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="Orqaga 5 daqiqa" onClick="{{h.back}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.back}}"/></svg></button>
+    <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="O'ynash / pauza" onClick="{{h.play}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{pv.playIc}}"/></svg></button>
+    <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="To'xtatish" onClick="{{h.stop}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.stop}}"/></svg></button>
+    <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="Oldinga 5 daqiqa" onClick="{{h.fwd}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.fwd}}"/></svg></button>
+    <button class="btn" style="background:#DC2626;color:#fff;border-color:#DC2626" onClick="{{h.live}}">LIVE</button>
+    <sc-for list="{{speeds}}" as="o" hint-placeholder-count="6"><button class="btn" style="min-height:36px;padding:0 10px;{{o.st}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+    <span class="row" style="margin-left:auto;gap:6px">
+     <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="Snapshot" onClick="{{h.snap}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.snap}}"/></svg></button>
+     <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="Yozuvni saqlash" onClick="{{h.clip}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.save}}"/></svg></button>
+     <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="Ovoz" onClick="{{h.mute}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{pv.volIc}}"/></svg></button>
+     <button class="btn" style="background:#1E293B;color:#fff;border-color:#475569" aria-label="To'liq ekran" onClick="{{h.fs}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.max}}"/></svg></button></span>
+   </div>
+   <div style="position:relative;height:58px">
+    <div style="position:absolute;left:0;right:0;top:22px;height:14px;background:#26354D;border-radius:4px"></div>
+    <sc-for list="{{segs}}" as="g" hint-placeholder-count="2"><div style="position:absolute;top:22px;height:14px;background:#16A34A;opacity:.7;left:{{g.l}}%;width:{{g.w}}%"></div></sc-for>
+    <sc-for list="{{marks}}" as="m" hint-placeholder-count="6"><div style="position:absolute;top:12px;width:4px;height:34px;border-radius:2px;background:{{m.c}};left:{{m.l}}%" title="{{m.label}}"></div></sc-for>
+    <div style="position:absolute;top:6px;width:2px;height:46px;background:#fff;left:{{pv.pos}}%"></div>
+    <input type="range" min="0" max="100" step="0.05" value="{{pv.pos}}" onInput="{{h.seek}}" aria-label="Vaqt chizig'i" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;margin:0">
+   </div>
+   <div class="row" style="justify-content:space-between;color:#B8C4D6;font-size:11px"><span>00</span><span>03</span><span>06</span><span>09</span><span>12</span><span>15</span><span>18</span><span>21</span><span>24</span></div>
+  </div>
+ </div>
+ <div class="col" style="flex:1 1 280px;min-width:0">
+  <div class="card col"><h2>Kamera bo'yicha qidirish</h2><input class="inp" placeholder="Kamera nomi" value="{{fld.cq.v}}" onInput="{{fld.cq.c}}" aria-label="Kamera qidirish">
+   <sc-for list="{{pcams}}" as="c" hint-placeholder-count="6"><button class="row" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;text-align:left;{{c.st}}" onClick="{{c.pick}}"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:{{c.dot}}"></span><span style="flex:1"><b>{{c.name}}</b><br><span class="sm muted">{{c.loc}}</span></span></button></sc-for></div>
+  <div class="card col"><h2>Hodisa bo'yicha topish</h2><sc-for list="{{marks}}" as="m" hint-placeholder-count="6"><button class="row" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;text-align:left" onClick="{{m.go}}"><b>{{m.t}}</b><span style="flex:1">{{m.txt}}</span></button></sc-for></div>
+ </div>
+</div>
+</sc-if>
+
+<!-- ===== ARCHIVE ===== -->
+<sc-if value="{{sc.gArchive}}" hint-placeholder-val="{{false}}">
+<div class="card row wrap">
+ <div><label class="lbl" for="ac">Kamera</label><select id="ac" class="inp" style="min-width:200px" value="{{arcCam}}" onChange="{{h.arcCam}}"><sc-for list="{{arcCamOpts}}" as="o" hint-placeholder-count="4"><option value="{{o.id}}">{{o.name}}</option></sc-for></select></div>
+ <div><label class="lbl" for="ad2">Sana</label><input id="ad2" class="inp" style="width:150px" value="10.11.2026" aria-label="Sana"></div>
+ <div class="row wrap" style="gap:6px;align-self:flex-end"><sc-for list="{{arcTypes}}" as="o" hint-placeholder-count="6"><button class="chip {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+</div>
+<div class="g2" style="grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr))">
+ <sc-for list="{{arcRows}}" as="a" hint-placeholder-count="6">
+  <div class="card col" style="gap:8px;padding:10px;{{a.st}}"><div style="aspect-ratio:16/9;border-radius:6px;background:linear-gradient(160deg,#243044,#0b111a);color:#fff;display:flex;align-items:center;justify-content:center;position:relative"><svg class="i" style="width:36px;height:36px" viewBox="0 0 24 24" aria-hidden="true"><path d="{{a.ic}}"/></svg><span class="hud bl"><span class="pl">{{a.t}}</span></span><span class="hud br"><span class="pl">{{a.dur}}</span></span></div>
+   <div><b>{{a.txt}}</b><div class="sm muted">{{a.camName}}</div></div>
+   <div class="row"><span class="badge b-{{a.k}}">{{a.type}}</span><button class="btn" style="margin-left:auto;min-height:32px" onClick="{{a.open}}">Pleyerda ochish</button></div></div>
+ </sc-for>
+</div>
+<sc-if value="{{arcEmpty}}" hint-placeholder-val="{{false}}"><div class="card muted">Tanlangan filtr bo'yicha yozuv topilmadi.</div></sc-if>
+<div class="sm muted">Arxivni kim ko'rgani va eksport qilgani audit logga yoziladi.</div>
+</sc-if>
+
+<!--MORE_SCREENS-->
+
+</main>
+</sc-if>
+
+<sc-if value="{{confirmFix}}" hint-placeholder-val="{{false}}">
+<div class="modal"><div class="card col" style="max-width:420px;width:100%" role="dialog" aria-label="Fix tasdiqlash">
+ <h2>Fix rejimini yoqish</h2>
+ <div>{{confirmTxt}}</div>
+ <div class="row" style="justify-content:flex-end"><button class="btn" onClick="{{h.fixCancel}}">Bekor qilish</button><button class="btn brown" onClick="{{h.fixGo}}">Tasdiqlash</button></div>
+</div></div>
+</sc-if>
+<sc-if value="{{confirmDel}}" hint-placeholder-val="{{false}}">
+<div class="modal"><div class="card col" style="max-width:420px;width:100%" role="dialog" aria-label="O'chirishni tasdiqlash">
+ <h2>O'chirishni tasdiqlang</h2>
+ <div>{{delTxt}}</div>
+ <div class="row" style="justify-content:flex-end"><button class="btn" onClick="{{h.delCancel}}">Bekor qilish</button><button class="btn danger" onClick="{{h.delGo}}">O'chirish</button></div>
+</div></div>
+</sc-if>
+<sc-if value="{{toast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status">{{toast}}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light","section":"Rejim"},"startScreen":{"editor":null},"startRole":{"editor":null},"startType":{"editor":null},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+constructor(props){
+ super(props);
+ this.COL=["#1E40AF","#0F766E","#9A3412","#6D28D9","#BE123C","#334155","#047857","#A16207"];
+ this.GR=[["#243044","#0b111a"],["#1f3a3a","#0a1414"],["#33303f","#100e18"],["#2a3a2a","#0c130c"],["#3a2f2a","#140f0c"],["#26324a","#0a0e17"]];
+ const cam=(id,name,loc,area,q,ai,on,zone,box)=>({id,name,loc,area,q,ai,on,zone,box});
+ const DY=["Du","Se","Ch","Pa","Ju","Sh","Ya"]; const W=(n,s,e)=>DY.map((d,i)=>({d,on:i<n,s,e}));
+ const em=(id,name,pos,dept,group,phone,hired,t,y,m,over)=>({id,name,pos,dept,group,phone,hired,t,y,m,over:over||null});
+ const sixDays=DY.map((d,i)=>({d,on:true,s:(i===0||i===2)?"10:00":"08:00",e:(i===0||i===2)?"19:00":"16:00"})); sixDays[5].on=false; sixDays[6].on=false;
+ this.state={
+  grace:10,selEmp:"e1",empDept:"Hammasi",editEmp:null,attDay:"today",attFilter:"all",attDept:"Hammasi",
+  schedules:[{id:"s1",name:"Ofis 5/2",type:"weekly",level:"Umumiy",days:W(5,"09:00","18:00"),brk:60},
+   {id:"s2",name:"Ishlab chiqarish 6/1",type:"weekly",level:"Umumiy",days:W(6,"08:00","17:00"),brk:60},
+   {id:"s3",name:"Aylanuvchi 3 smena",type:"shift",level:"Guruh",shiftOffset:1,brk:30},
+   {id:"s4",name:"Qo'riqlash — kunora",type:"alt",level:"Guruh",startDay:1,start:"08:00",end:"20:00",brk:0},
+   {id:"s5",name:"Ombor — 3 kunda 1",type:"every3",level:"Guruh",startDay:0,start:"08:00",end:"20:00",brk:0},
+   {id:"s6",name:"Individual: F. Ismoilov",type:"weekly",level:"Individual",days:sixDays,brk:30}],
+  groups:[{id:"g1",name:"Ma'muriyat",dept:"Boshqaruv",sched:"s1"},{id:"g2",name:"Ishlab chiqarish A",dept:"Ishlab chiqarish",sched:"s2"},{id:"g3",name:"Ishlab chiqarish B (smena)",dept:"Ishlab chiqarish",sched:"s3"},{id:"g4",name:"Qo'riqlash",dept:"Xavfsizlik",sched:"s4"},{id:"g5",name:"Ombor",dept:"Ombor",sched:"s5"}],
+  emps:[em("e1","Aziz Karimov","Bosh muhandis","Boshqaruv","g1","+998 90 100 00 01","12.03.2019",["08:52",null,0],["08:55","19:20",0],[0,0,0]),
+   em("e2","Dilnoza Rahimova","Bosh buxgalter","Moliya","g1","+998 90 100 00 02","02.09.2020",["09:24",null,0],["09:03","18:01",0],[3,1,1]),
+   em("e3","Jasur Toshmatov","Stanok operatori","Ishlab chiqarish","g2","+998 90 100 00 03","15.01.2021",["07:55",null,0],["07:57","17:04",0],[0,0,0]),
+   em("e4","Malika Yusupova","Sifat nazoratchisi","Ishlab chiqarish","g2","+998 90 100 00 04","20.06.2021",["08:07",null,0],["08:00","16:25",0],[2,2,2]),
+   em("e5","Sherzod Nazarov","Payvandchi","Ishlab chiqarish","g2","+998 90 100 00 05","11.11.2022",["08:31",null,1],["08:44","17:05",1],[2,0,1]),
+   em("e6","Nodira Abdullayeva","Kadrlar inspektori","Boshqaruv","g1","+998 90 100 00 06","01.03.2023",[null,null,0],["09:41","18:00",0],[1,0,5]),
+   em("e7","Bobur Ergashev","Operator","Ishlab chiqarish","g3","+998 90 100 00 07","09.08.2023",["05:58",null,0],["05:55","14:02",0],[1,0,0]),
+   em("e8","Gulnora Saidova","Operator","Ishlab chiqarish","g3","+998 90 100 00 08","30.10.2023",["06:19",null,0],[null,null,0],[4,1,3]),
+   em("e9","Otabek Qodirov","Qorovul","Xavfsizlik","g4","+998 90 100 00 09","14.02.2024",["07:50",null,0],[null,null,0],[0,0,0]),
+   em("e10","Farhod Ismoilov","Qorovul","Xavfsizlik","g4","+998 90 100 00 10","03.05.2024",["08:03",null,0],["09:55","19:02",0],[1,0,0],"s6"),
+   em("e11","Ravshan Aliyev","Omborchi","Ombor","g5","+998 90 100 00 11","18.09.2024",["08:12",null,0],[null,null,0],[2,0,1]),
+   em("e12","Zilola Hasanova","Sifat nazoratchisi","Ishlab chiqarish","g2","+998 90 100 00 12","27.01.2025",["08:02","09:12",0],["08:01","17:00",0],[0,3,1])],
+  wk:W(5,"09:00","18:00"),newType:(props&&props.startType)||"weekly",
+  screen:(props&&props.startScreen)||"login",role:(props&&props.startRole)||null,theme:(props&&props.theme)==="dark"?"dark":"light",sec:34867,remember:true,showPass:false,loginErr:"",
+  f:{corp:"KORXONA-001",login:"",pass:"",gq:"",cq:"",eq:"",en:"",ep:"",ed:"",ephone:"",ehire:"",egroup:"g1",eover:"",gname:"",sn:"",sbrk:"60",soff:"1",sday:"2",sstart:"08:00",send:"20:00",sEmp:"e1",lunchS:"13:00",lunchE:"14:00",aq:"",pq:"",fq:"",agrp:"g1",aemp:"e1",sfrom:"10.11.2026",sto:"",sreason:"Vaqtinchalik",cn:"",cip:"",crtsp:"",clog:"",cpass:"",ctype:"Statsionar (fixed)",carea:"Darvoza",crec:"Doimiy yozuv",cdays:"30",uname:"",ulogin:"",urole:"guard",upass:""},
+  cams:[cam("c1","Kirish avto","1-darvoza · kirish","Darvoza","FHD",["ANPR"],true,"darvoza","plate"),
+   cam("c2","Chiqish avto","1-darvoza · chiqish","Darvoza","FHD",["ANPR"],true,"darvoza","plate"),
+   cam("c3","Yuz — asosiy kirish","Asosiy kirish","Kirish","FHD",["Face Recognition"],true,"kirish","face"),
+   cam("c4","Yuz — ishlab chiqarish","Ishlab chiqarish kirishi","Ishlab chiqarish","HD",["Face Recognition"],true,"sex1","face"),
+   cam("c5","1-sex ichki","1-sex","Ishlab chiqarish","HD",["Person Detection"],true,"sex1","person"),
+   cam("c6","2-sex ichki","2-sex","Ishlab chiqarish","HD",["Person Detection"],true,"sex2","person"),
+   cam("c7","Ombor ichki","Ombor","Ombor","HD",["Motion Detection"],true,"ombor",""),
+   cam("c8","Yuklash maydoni","Hovli","Hovli","FHD",["Person Detection"],true,"hovli","person"),
+   cam("c9","Shimoliy perimetr","To'siq, shimol","Perimetr","HD",["Motion Detection"],true,"perim_n",""),
+   cam("c10","Janubiy perimetr","To'siq, janub","Perimetr","HD",["Motion Detection"],true,"perim_s",""),
+   cam("c11","Oshxona","Ovqatlanish xonasi","Binolar","HD",["Person Detection"],true,"oshxona","person"),
+   cam("c12","Ma'muriy bino","1-qavat","Binolar","HD",["Face Detection"],false,"admin","")],
+  gridN:"2",selCam:"c1",camArea:"Hammasi",dragId:null,
+  gate:"closed",gateMsg:{k:"neutral",t:"Buyruq kutilmoqda"},fix:null,confirmFix:null,failSim:false,gateLog:[],
+  audit:[],toast:"",offline:false,pend:0
+ };
+ this.EV=[
+  {t:"09:41:02",txt:"Xodim kirib keldi — Aziz Karimov",cam:"Yuz — asosiy kirish",k:"ok",tag:"Kirish",ic:"face"},
+  {t:"09:38:47",txt:"Avtomobil kirdi — 01 A 123 AB",cam:"Kirish avto",k:"ok",tag:"Kirish",ic:"car"},
+  {t:"09:36:10",txt:"Noma'lum shaxs aniqlandi (tasdiqlanmagan)",cam:"Yuz — asosiy kirish",k:"warn",tag:"Tekshirish",ic:"face"},
+  {t:"09:34:55",txt:"Shlagbaum ochildi",cam:"1-darvoza",k:"info",tag:"Shlagbaum",ic:"gateOpen"},
+  {t:"09:21:30",txt:"Kamera aloqasi uzildi — Ma'muriy bino",cam:"Ma'muriy bino",k:"danger",tag:"Aloqa",ic:"video"},
+  {t:"09:12:18",txt:"Xodim chiqib ketdi — Zilola Hasanova",cam:"Yuz — asosiy kirish",k:"neutral",tag:"Chiqish",ic:"face"},
+  {t:"09:05:44",txt:"Avtomobil chiqdi — 95 E 987 KL",cam:"Chiqish avto",k:"neutral",tag:"Chiqish",ic:"car"},
+  {t:"09:05:20",txt:"Shlagbaum yopildi",cam:"1-darvoza",k:"info",tag:"Shlagbaum",ic:"gateClosed"}];
+ this.ICONS={shield:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",dash:"M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z",users:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8",layers:"M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5",cal:"M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",video:"M23 7l-7 5 7 5zM3 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",map:"M1 6v16l7-4 8 4 7-4V2l-7 4-8-4zM8 2v16M16 6v16",gateClosed:"M3 20h5M5.5 20V9M5.5 11h16v4h-16M10 11v4M14.5 11v4M19 11v4",gateOpen:"M3 20h5M5.5 20V10M5.5 12 18.5 3l2 3L5.5 16",face:"M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 10v1M15 10v1M9 15c1 1 5 1 6 0",car:"M5 17h14M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0M3 13l2-6h12l4 5v5h-2M3 13v4h2M3 13h18",clock:"M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2",film:"M2 4h20v16H2zM2 9h20M7 4v5M12 4v5M17 4v5",file:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8",log:"M4 6h16M4 12h16M4 18h10",gear:"M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6",search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3",play:"M6 4l14 8-14 8z",pause:"M6 4h4v16H6zM14 4h4v16h-4z",stop:"M5 5h14v14H5z",moon:"M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z",sun:"M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4",out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",dl:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3",plus:"M12 5v14M5 12h14",max:"M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3",lock:"M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4",eye:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",back:"M11 17l-5-5 5-5M18 17l-5-5 5-5",fwd:"M13 17l5-5-5-5M6 17l5-5-5-5",vol:"M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14",mute:"M11 5 6 9H2v6h4l5 4zM22 9l-6 6M16 9l6 6",snap:"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",save:"M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8",check:"M20 6 9 17l-5-5",x:"M18 6 6 18M6 6l12 12",edit:"M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z",popout:"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3",sync:"M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15",server:"M2 3h20v7H2zM2 14h20v7H2zM6 6.5h.01M6 17.5h.01",user:"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",warn:"M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01",upload:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"};
+ this.USERS0=[{login:"admin",name:"Rustam Ochilov",role:"Administrator",twofa:true,last:"10.11.2026 08:30",st:"Faol"},{login:"qorovul",name:"Farhod Ismoilov",role:"Qorovul",twofa:false,last:"10.11.2026 07:58",st:"Faol"},{login:"qorovul2",name:"Otabek Qodirov",role:"Qorovul",twofa:false,last:"09.11.2026 19:55",st:"Faol"},{login:"mas_ul",name:"Shahlo Karimova",role:"Mas'ul shaxs",twofa:true,last:"10.11.2026 08:47",st:"Faol"}];
+ this.SESS0=[{id:1,u:"admin",dev:"Windows PC · 192.168.1.20",since:"08:30"},{id:2,u:"qorovul",dev:"Windows PC (qorovul xonasi) · 192.168.1.5",since:"07:58"},{id:3,u:"mas_ul",dev:"Android ilova · mobil tarmoq",since:"08:47"}];
+ this.AUD0=[{t:"08:47:10",u:"Shahlo Karimova",cat:"Kirish",text:"Tizimga kirish (Android)",k:"ok",res:"Muvaffaqiyatli"},{t:"08:30:12",u:"Rustam Ochilov",cat:"Kirish",text:"Tizimga kirish (Windows)",k:"ok",res:"Muvaffaqiyatli"},{t:"07:58:40",u:"Farhod Ismoilov",cat:"Kirish",text:"Tizimga kirish (Windows)",k:"ok",res:"Muvaffaqiyatli"},{t:"07:12:05",u:"noma'lum",cat:"Kirish",text:"Ruxsatsiz kirish urinishi (login: test)",k:"danger",res:"Rad etildi"},{t:"Kecha 18:22",u:"Rustam Ochilov",cat:"Video",text:"Video eksport: Chiqish avto, 18:00–18:10",k:"ok",res:"Muvaffaqiyatli"},{t:"Kecha 17:40",u:"Farhod Ismoilov",cat:"Video",text:"Arxiv ko'rildi: Yuklash maydoni",k:"ok",res:"Muvaffaqiyatli"},{t:"Kecha 16:05",u:"Farhod Ismoilov",cat:"Shlagbaum",text:"OCHISH buyrug'i bajarildi",k:"ok",res:"Muvaffaqiyatli"}];
+ this.VH=[{id:"v1",plate:"01 A 123 AB",who:"Aziz Karimov",dir:"Kirdi",t:"08:49",cam:"Kirish avto",st:"Ruxsat berilgan",k:"ok"},{id:"v2",plate:"01 B 456 CD",who:"Dilnoza Rahimova",dir:"Kirdi",t:"09:20",cam:"Kirish avto",st:"Ruxsat berilgan",k:"ok"},{id:"v3",plate:"30 C 789 EF",who:"Yetkazib beruvchi (mehmon)",dir:"Kirdi",t:"09:12",cam:"Kirish avto",st:"Vaqtinchalik ruxsat",k:"info"},{id:"v4",plate:"01 X 321 YZ",who:"—",dir:"Kirdi",t:"09:36",cam:"Kirish avto",st:"Ro'yxatda yo'q",k:"warn"},{id:"v5",plate:"01 D 654 GH",who:"Sherzod Nazarov",dir:"Kirdi",t:"08:28",cam:"Kirish avto",st:"Ruxsat berilgan",k:"ok"},{id:"v6",plate:"95 E 987 KL",who:"Kompaniya yuk avtomobili",dir:"Chiqdi",t:"09:05",cam:"Chiqish avto",st:"Ruxsat berilgan",k:"ok"},{id:"v7",plate:"01 F 111 MN",who:"Zilola Hasanova",dir:"Chiqdi",t:"09:14",cam:"Chiqish avto",st:"Ruxsat berilgan",k:"ok"}];
+ this._t=null;
+}
+componentDidMount(){ this._t=setInterval(()=>this.tick(),1000); }
+componentWillUnmount(){ if(this._t) clearInterval(this._t); }
+tick(){ const s=this.state; const u={sec:s.sec+1}; if(s.offline&&s.sec%3===0) u.pend=s.pend+1; this.setState(u); if(this.tickMore) this.tickMore(); }
+tickMore(){ const s=this.state; if(s.screen!=="g-player") return; if(s.live!==false) this.setState({pos:s.sec/864}); else if(s.playing!==false) this.setState({pos:Math.min(99.9,(s.pos==null?40.4:s.pos)+(s.speed||1)*0.02)}); }
+hms(x){ const h=Math.floor(x/3600),m=Math.floor(x%3600/60),c=x%60; const p=n=>(n<10?"0":"")+n; return p(h)+":"+p(m)+":"+p(c); }
+mm(t){ const a=t.split(":"); return (+a[0])*60+(+a[1]); }
+fmt(n){ n=((n%1440)+1440)%1440; const p=x=>(x<10?"0":"")+x; return p(Math.floor(n/60))+":"+p(n%60); }
+setF(k,v){ this.setState(p=>({f:Object.assign({},p.f,{[k]:v})})); }
+go(sc){ this.setState({screen:sc}); }
+toast(t){ this.setState({toast:t}); clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({toast:""}),2800); }
+who(){ const r=this.state.role; return r==="guard"?"Farhod Ismoilov":r==="admin"?"Rustam Ochilov":"Shahlo Karimova"; }
+aud(cat,text,res){ const k=res||"ok"; this.setState(p=>({audit:[{t:this.hms(p.sec),u:this.who(),cat,text,k,res:k==="ok"?"Muvaffaqiyatli":k==="warn"?"Ogohlantirish":"Rad etildi"}].concat(p.audit)})); }
+login(e){ if(e&&e.preventDefault) e.preventDefault(); const f=this.state.f; const lg=(f.login||"").trim().toLowerCase(); const map={qorovul:"guard",admin:"admin",mas_ul:"manager"}; const r=map[lg];
+ if(!r||!f.pass){ this.setState({loginErr:"Login yoki parol noto'g'ri. Urinish audit logga yozildi."}); this.setState(p=>({audit:[{t:this.hms(p.sec),u:lg||"—",cat:"Kirish",text:"Ruxsatsiz kirish urinishi",k:"danger",res:"Rad etildi"}].concat(p.audit)})); return; }
+ const first={guard:"g-dash",admin:"a-dash",manager:"m-dash"}[r]; this.setState({role:r,screen:first,loginErr:""}); setTimeout(()=>this.aud("Kirish","Tizimga kirish ("+r+")"),0); }
+demo(l){ this.setState(p=>({f:Object.assign({},p.f,{login:l,pass:"demo"}),loginErr:""})); }
+gcmd(kind){ const s=this.state;
+ if(s.fix){ this.setState({gateMsg:{k:"danger",t:"Buyruq bajarilmadi: «"+(s.fix==="open"?"Ochiq":"Yopiq")+" holatda fix» faol. Avval fix rejimini bekor qiling."}}); return; }
+ if(s.gate.indexOf("moving")===0) return;
+ const prev=s.gate; const nm=kind==="open"?"OCHISH":"YOPISH";
+ this.setState({gate:kind==="open"?"moving-open":"moving-close",gateMsg:{k:"warn",t:"Buyruq yuborildi — rele javobi va datchik tasdig'i kutilmoqda…"}});
+ setTimeout(()=>{ const st=this.state; const t=this.hms(st.sec);
+  if(st.failSim){ this.setState(p=>({gate:prev,gateMsg:{k:"danger",t:"Bajarilmadi: qayta aloqa datchigi holat o'zgarganini tasdiqlamadi (3 s). Qo'lda boshqaruvni tekshiring."},gateLog:[{t,who:this.who(),cmd:nm,res:"Bajarilmadi",k:"danger"}].concat(p.gateLog)})); this.aud("Shlagbaum",nm+" buyrug'i bajarilmadi (datchik tasdig'i yo'q)","danger"); }
+  else { this.setState(p=>({gate:kind==="open"?"open":"closed",gateMsg:{k:"ok",t:"Bajarildi — datchik tasdig'i: shlagbaum "+(kind==="open"?"ochiq":"yopiq")+"."},gateLog:[{t,who:this.who(),cmd:nm,res:"Bajarildi",k:"ok"}].concat(p.gateLog)})); this.aud("Shlagbaum",nm+" buyrug'i bajarildi"); }
+ },1300); }
+planFor(s,di){ const wd=((di+6)%7+7)%7; const OFF={work:false};
+ if(s.type==="weekly"){ const d=s.days[wd]; return d&&d.on?{work:true,s:d.s,e:d.e,night:this.mm(d.e)<=this.mm(d.s)}:OFF; }
+ if(s.type==="shift"){ if(wd===6) return OFF; const wk=Math.floor((di+6)/7); const k=(((wk+s.shiftOffset)%3)+3)%3; return [{work:true,s:"06:00",e:"14:00",n:"1-smena"},{work:true,s:"14:00",e:"22:00",n:"2-smena"},{work:true,s:"22:00",e:"06:00",night:true,n:"3-smena"}][k]; }
+ const p=s.type==="alt"?2:3; const df=di-s.startDay; return (((df%p)+p)%p===0)?{work:true,s:s.start,e:s.end,night:this.mm(s.end)<=this.mm(s.start)}:OFF; }
+effSched(e){ const st=this.state; const g=st.groups.find(x=>x.id===e.group)||st.groups[0]; return st.schedules.find(x=>x.id===(e.over||g.sched))||st.schedules[0]; }
+planDays(s){ let n=0; for(let d=-31;d<0;d++){ if(this.planFor(s,d).work) n++; } return n; }
+att(e,day){ const di=day==="today"?9:8, sc=this.effSched(e), p=this.planFor(sc,di), r=day==="today"?e.t:e.y, g=this.state.grace;
+ const nowM=day==="today"?Math.floor(this.state.sec/60):1440;
+ const o={e,sc,p,plan:p.work?p.s+"–"+p.e+(p.night?" (+1)":""):"Dam olish",arr:r[0],lev:r[1],ik:"neutral",it:"",ok:"neutral",ot:"",flag:{}};
+ if(!p.work){ o.it="Dam olish"; o.ot="—"; o.flag.off=true; return o; }
+ const st=this.mm(p.s), en=this.mm(p.e)+(p.night?1440:0);
+ if(!r[0]){ if(st>nowM){o.it="Hali boshlanmagan";o.flag.pending=true;} else {o.it="Kelmadi";o.ik="danger";o.flag.absent=true;} o.ot="—"; return o; }
+ const late=this.mm(r[0])-st; o.late=late;
+ if(late<=g){o.it="O'z vaqtida";o.ik="ok";o.flag.ontime=true;}
+ else if(r[2]){o.it="Sababli kechikish +"+late+" daq";o.ik="info";o.flag.excused=true;}
+ else {o.it="Kechikdi +"+late+" daq";o.ik="warn";o.flag.late=true;}
+ if(r[1]){ const d=this.mm(r[1])-en; if(d<0){o.ot="Erta ketdi "+d+" daq";o.ok="warn";o.flag.early=true;} else if(d>30){o.ot="Qo'shimcha ish +"+d+" daq";o.ok="info";o.flag.extra=true;} else {o.ot="O'z vaqtida ketdi";o.ok="ok";} }
+ else { o.ot=day==="today"?"Korxonada":"Qayd etilmagan"; o.ok=day==="today"?"info":"warn"; o.flag.onsite=day==="today"; }
+ return o; }
+detsFor(e){ const st=this.state; const idx=st.emps.findIndex(x=>x.id===e.id); const arr=e.t[0]; if(!arr) return [];
+ const seqs={"Ishlab chiqarish":["c3","c4","c5","c11","c5"],"Boshqaruv":["c3","c12","c11","c12","c12"],"Moliya":["c3","c12","c11","c12","c12"],"Xavfsizlik":["c3","c9","c10","c9","c8"],"Ombor":["c3","c7","c8","c7","c7"]};
+ const seq=seqs[e.dept]||seqs["Boshqaruv"]; const offs=[0,4,38,95,140]; const lim=e.t[1]?this.mm(e.t[1]):Math.floor(st.sec/60)-1;
+ const last=[93,81,95,88,79,0,91,76,94,89,90,85][idx]||90; const confs=[97,95,92,90,last];
+ return seq.map((cid,i)=>({id:e.id+"-"+i,t:this.fmt(Math.min(this.mm(arr)+offs[i],lim-(4-i))),cam:cid,conf:confs[i]})).reverse(); }
+askDel(kind,id,label){ this.setState({confirmDel:{kind,id,label}}); }
+doDel(){ const c=this.state.confirmDel, s=this.state; if(!c) return; const no=(t)=>{ this.setState({confirmDel:null}); this.toast(t); };
+ if(c.kind==="emp"&&s.emps.length<=1) return no("Oxirgi xodimni o'chirib bo'lmaydi");
+ if(c.kind==="group"&&s.emps.some(e=>e.group===c.id)) return no("Guruhda xodimlar bor — avval ularni boshqa guruhga o'tkazing");
+ if(c.kind==="group"&&s.groups.length<=1) return no("Oxirgi guruhni o'chirib bo'lmaydi");
+ if(c.kind==="sched"&&(s.groups.some(g=>g.sched===c.id)||s.emps.some(e=>e.over===c.id))) return no("Grafik guruh yoki xodimga biriktirilgan — avval boshqa grafik biriktiring");
+ if(c.kind==="sched"&&s.schedules.length<=1) return no("Oxirgi grafikni o'chirib bo'lmaydi");
+ if(c.kind==="cam"&&s.cams.length<=1) return no("Oxirgi kamerani o'chirib bo'lmaydi");
+ if(c.kind==="user"&&c.label===this.who()) return no("O'zingizning hisobingizni o'chirib bo'lmaydi");
+ const u={confirmDel:null};
+ if(c.kind==="emp"){ u.emps=s.emps.filter(e=>e.id!==c.id); if(s.selEmp===c.id) u.selEmp=u.emps[0].id; if(s.screen==="a-empprof"||s.screen==="a-empedit") u.screen="a-emp"; }
+ if(c.kind==="group") u.groups=s.groups.filter(g=>g.id!==c.id);
+ if(c.kind==="sched"){ u.schedules=s.schedules.filter(x=>x.id!==c.id); u.schedSel=u.schedules[0].id; }
+ if(c.kind==="cam"){ u.cams=s.cams.filter(x=>x.id!==c.id); if(s.selCam===c.id) u.selCam=u.cams[0].id; }
+ if(c.kind==="user") u.users=(s.users||this.USERS0).filter(x=>x.login!==c.id);
+ this.setState(u); this.toast("O'chirildi: "+c.label); this.aud("Sozlamalar","O'chirildi: "+c.label,"warn"); }
+renderVals(){
+ const s=this.state, me=this, f=s.f, v={}; const ic=this.ICONS; v.ic=ic;
+ const dark=s.theme==="dark";
+ v.rootStyle=dark?"--bg:#0E1622;--surface:#172337;--s2:#1C2B42;--text:#E8EDF4;--muted:#A3B0C2;--border:#2D3E58;--navy:#0B121D;--slate:#475569;--brown:#795548;--accent:#2563EB;--acctx:#8DB0F7;--side:#0B121D;--okbg:#123524;--oktx:#86EFAC;--warnbg:#3D2E0A;--warntx:#FCD34D;--dangerbg:#451A1A;--dangertx:#FCA5A5;--infobg:#172A55;--infotx:#9DBBFF;--nbg:#25344D;--ntx:#C5CFDD"
+  :"--bg:#F3F5F8;--surface:#FFFFFF;--s2:#F8FAFC;--text:#172337;--muted:#566275;--border:#DDE3EA;--navy:#172337;--slate:#334155;--brown:#795548;--accent:#2563EB;--acctx:#1D4ED8;--side:#172337;--okbg:#DCFCE7;--oktx:#166534;--warnbg:#FEF3C7;--warntx:#92400E;--dangerbg:#FEE2E2;--dangertx:#991B1B;--infobg:#DBEAFE;--infotx:#1E40AF;--nbg:#E8ECF1;--ntx:#334155";
+ v.themeIc=dark?ic.sun:ic.moon;
+ const fld={}; Object.keys(f).forEach(k=>{fld[k]={v:f[k]==null?"":f[k],c:(e)=>me.setF(k,e.target.value)};}); v.fld=fld;
+ v.passType=s.showPass?"text":"password"; v.remember=s.remember; v.loginErr=s.loginErr;
+ const S=k=>s.screen===k; const sc={login:S("login"),app:s.screen!=="login",gDash:S("g-dash"),gCams:S("g-cams"),gGate:S("g-gate")}; v.sc=sc;
+ v.roleLabel={guard:"Qorovul",admin:"Administrator",manager:"Mas'ul shaxs"}[s.role]||""; v.isAdmin=s.role==="admin";
+ v.userName=this.who(); v.userInit=v.userName.split(" ").map(x=>x[0]).join("");
+ v.titles={"g-dash":"Qorovul paneli","g-cams":"Multi-kamera monitoring","g-gate":"Shlagbaum boshqaruvi"};
+ v.title=this.titles?this.titles[s.screen]:""; this.TITLES=this.TITLES||{};
+ v.conn=s.offline?{k:"warn",t:"Lokal rejim (oflayn)"}:{k:"ok",t:"Server: onlayn"};
+ v.offline=s.offline; v.pend=s.pend; v.clock=this.hms(s.sec); v.toast=s.toast;
+ const NAV={guard:[["g-dash","Bosh panel","dash"],["g-cams","Multi-kamera","video"],["g-gate","Shlagbaum","gateClosed"],["g-player","Video pleyer","play"],["g-archive","Video arxiv","film"]],
+  admin:[["a-dash","Dashboard","dash"],["a-emp","Xodimlar","users"],["a-groups","Bo'limlar va guruhlar","layers"],["a-sched","Ish grafiklari","cal"],["a-cams","Kameralar","video"],["a-map","Kamera hududlari va xaritasi","map"],["g-gate","Shlagbaumlar va kirish nuqtalari","gateClosed"],["a-face","Face Recognition","face"],["a-anpr","ANPR / LPR","car"],["a-att","Davomat va monitoring","clock"],["g-archive","Video arxiv","film"],["a-reports","Hisobotlar","file"],["a-users","Foydalanuvchilar va rollar","shield"],["a-settings","Tizim sozlamalari","gear"],["a-audit","Audit log","log"]],
+  manager:[["m-dash","Bosh sahifa","dash"],["a-att","Davomat","clock"],["a-reports","Hisobotlar","file"]]};
+ const PAR={"a-empprof":"a-emp","a-empedit":"a-emp","a-schednew":"a-sched","a-camedit":"a-cams"}; if(s.role==="admin"){PAR["g-cams"]="a-cams";PAR["g-player"]="a-cams";}
+ const act=PAR[s.screen]||s.screen;
+ v.nav=(NAV[s.role]||[]).map(n=>({label:n[1],ic:ic[n[2]],cls:n[0]===act?"on":"",go:()=>me.go(n[0])}));
+ // fix + gate
+ v.fixOn=!!s.fix; v.fixText=s.fix==="open"?"Fix: ochiq holatda ushlab turilmoqda":"Fix: yopiq holatda ushlab turilmoqda";
+ v.confirmFix=!!s.confirmFix; v.confirmTxt=s.confirmFix==="open"?"Shlagbaum ochiq holatda qulflanadi va oddiy OCHISH/YOPISH buyruqlari bloklanadi. Davom etasizmi?":"Shlagbaum yopiq holatda qulflanadi va oddiy OCHISH/YOPISH buyruqlari bloklanadi. Davom etasizmi?";
+ const gs=s.gate, mv=gs.indexOf("moving")===0;
+ v.g={stateTxt:gs==="open"?"Ochiq":gs==="closed"?"Yopiq":gs==="moving-open"?"Ochilmoqda…":"Yopilmoqda…",badgeK:gs==="open"?"ok":gs==="closed"?"neutral":"warn",
+  openCls:(gs==="open"?"on ":"")+(mv?"busy":""),closeCls:(gs==="closed"?"on ":"")+(mv?"busy":""),
+  openSub:gs==="open"?"FAOL — ochiq":gs==="moving-open"?"Bajarilmoqda…":"",closeSub:gs==="closed"?"FAOL — yopiq":gs==="moving-close"?"Bajarilmoqda…":"",
+  armStyle:"transform:rotate("+(gs==="open"?-62:mv?-30:0)+"deg)"};
+ v.gateMsg=s.gateMsg; v.failSim=s.failSim; v.gateLog=s.gateLog; v.gateLogEmpty=s.gateLog.length===0;
+ v.hw=[{l:"Rele kontrolleri",v:"Ulangan (demo)",k:"info"},{l:"Qayta aloqa datchigi",v:gs==="open"?"Ochiq":gs==="closed"?"Yopiq":"Oraliq",k:mv?"warn":"ok"},{l:"Watchdog",v:"Normal (2 s)",k:"ok"},{l:"Avariya qo'lda boshqaruv",v:"Tayyor",k:"ok"}];
+ // cameras
+ const vis=(c)=>true;
+ const mkCam=(c,i)=>{ const g=me.GR[i%6]; const bx=c.box==="plate"?"left:36%;top:54%;width:28%;height:15%":c.box==="face"?"left:42%;top:20%;width:16%;height:34%":c.box==="person"?"left:30%;top:22%;width:18%;height:58%":"display:none";
+  return {id:c.id,name:c.name,loc:c.loc,q:c.q,online:c.on,offline:!c.on,aiTxt:c.ai.join(", "),style:"background:"+(c.on?"linear-gradient(160deg,"+g[0]+","+g[1]+")":"#2B3140")+(s.selCam===c.id?";box-shadow:0 0 0 3px var(--accent)":""),box:bx,boxLbl:c.box==="plate"?"ANPR · demo":c.box==="face"?"Yuz · demo":"Odam · demo",open:()=>me.setState({selCam:c.id,screen:"g-cams"})}; };
+ v.cams4=s.cams.slice(0,4).map(mkCam);
+ const ord=s.cams, q=(f.cq||"").trim().toLowerCase();
+ const flt=ord.filter(c=>(s.camArea==="Hammasi"||c.area===s.camArea)&&(!q||(c.name+" "+c.loc).toLowerCase().indexOf(q)>=0));
+ const cap=s.gridN==="c"?6:(+s.gridN)*(+s.gridN);
+ const cols=s.gridN==="c"?3:+s.gridN; v.gridCss="grid-template-columns:repeat("+cols+",minmax(0,1fr))";
+ const list=flt.slice(0,cap); v.vis=list.length;
+ const tiles=list.map((c,i)=>{ const o=mkCam(c,ord.indexOf(c)); o.full=true; o.empty=false; o.cell=(s.gridN==="c"&&i===0)?"grid-column:span 2;grid-row:span 2":"";
+  o.pick=()=>me.setState({selCam:c.id}); o.ds=()=>me.setState({dragId:c.id}); o.dov=(e)=>{if(e&&e.preventDefault)e.preventDefault();};
+  o.drop=(e)=>{ if(e&&e.preventDefault)e.preventDefault(); const d=me.state.dragId; if(!d||d===c.id)return; me.setState(p=>{const a=p.cams.slice(); const x=a.findIndex(z=>z.id===d), y=a.findIndex(z=>z.id===c.id); const t=a[x]; a[x]=a[y]; a[y]=t; return {cams:a,dragId:null};}); };
+  return o; });
+ while(tiles.length<cap&&tiles.length<16){ tiles.push({empty:true,full:false,cell:""}); }
+ v.tiles=tiles;
+ v.gridOpts=[["1","1×1"],["2","2×2"],["3","3×3"],["4","4×4"],["c","Custom"]].map(o=>({label:o[1],cls:s.gridN===o[0]?"on":"",pick:()=>me.setState({gridN:o[0]})}));
+ const areas=["Hammasi"].concat(Array.from(new Set(s.cams.map(c=>c.area))));
+ v.areaOpts=areas.map(a=>({label:a,cls:s.camArea===a?"on":"",pick:()=>me.setState({camArea:a})}));
+ const sel=s.cams.find(c=>c.id===s.selCam)||s.cams[0]; v.selName=sel.name;
+ v.events=this.EV.slice(0,6);
+ // guard quick search (extended in later parts)
+ v.gsRes=[]; v.gsEmpty=false;
+ const h={}; v.h=h;
+ h.login=(e)=>me.login(e); h.showPass=()=>me.setState({showPass:!me.state.showPass}); h.remember=()=>me.setState({remember:!me.state.remember});
+ h.demoG=()=>me.demo("qorovul"); h.demoA=()=>me.demo("admin"); h.demoM=()=>me.demo("mas_ul");
+ h.logout=()=>{me.aud("Kirish","Tizimdan chiqish"); me.setState({screen:"login",role:null,f:Object.assign({},me.state.f,{pass:""})});};
+ h.theme=()=>me.setState({theme:me.state.theme==="dark"?"light":"dark"});
+ h.gOpen=()=>me.gcmd("open"); h.gClose=()=>me.gcmd("close"); h.failSim=()=>me.setState({failSim:!me.state.failSim});
+ h.fixOpenAsk=()=>me.setState({confirmFix:"open"}); h.fixClosedAsk=()=>me.setState({confirmFix:"closed"}); h.fixCancel=()=>me.setState({confirmFix:null});
+ h.fixGo=()=>{ const k=me.state.confirmFix; me.setState(p=>({fix:k,confirmFix:null,gate:k==="open"?"open":"closed",gateMsg:{k:"warn",t:"Fix rejimi faol — oddiy buyruqlar bloklangan."},gateLog:[{t:me.hms(p.sec),who:me.who(),cmd:"FIX: "+(k==="open"?"ochiq":"yopiq"),res:"Yoqildi",k:"warn"}].concat(p.gateLog)})); me.aud("Shlagbaum","Fix rejimi yoqildi: "+(k==="open"?"ochiq":"yopiq"),"warn"); };
+ h.fixOff=()=>{ me.setState(p=>({fix:null,gateMsg:{k:"neutral",t:"Fix rejimi bekor qilindi. Buyruq kutilmoqda."},gateLog:[{t:me.hms(p.sec),who:me.who(),cmd:"FIX bekor",res:"Bajarildi",k:"ok"}].concat(p.gateLog)})); me.aud("Shlagbaum","Fix rejimi bekor qilindi"); };
+ h.toCams=()=>me.go("g-cams"); h.toPlayer=()=>me.setState({screen:"g-player"}); h.toCamNew=()=>me.go("a-camedit");
+ h.faceImg=()=>me.toast("Demo: yuz tasviri bo'yicha qidiruv simulyatsiya qilinadi");
+ this.MORE&&this.MORE(v,h,sc,s,f,ic);
+ // ---- admin core
+ Object.assign(sc,{aDash:S("a-dash"),aEmp:S("a-emp"),aEmpProf:S("a-empprof"),aEmpEdit:S("a-empedit"),aGroups:S("a-groups")});
+ Object.assign(v.titles,{"a-dash":"Administrator dashboard","a-emp":"Xodimlar","a-empprof":"Xodim profili","a-empedit":s.editEmp==="new"?"Xodim qo'shish":"Xodimni tahrirlash","a-groups":"Bo'limlar va guruhlar"});
+ const ini=n=>n.split(" ").map(x=>x[0]).join("").slice(0,2);
+ const colOf=id=>me.COL[(parseInt(id.slice(1),10)||0)%8];
+ const grpOf=id=>s.groups.find(g=>g.id===id)||s.groups[0];
+ const rowsT=s.emps.map(e=>me.att(e,"today")); v._rowsT=rowsT;
+ const cnt=fn=>rowsT.filter(fn).length;
+ const kel=cnt(r=>r.arr), hoz=cnt(r=>r.arr&&!r.lev), kech=cnt(r=>r.flag.late||r.flag.excused), kelm=cnt(r=>r.flag.absent), erta=cnt(r=>r.flag.early);
+ const camOn=s.cams.filter(c=>c.on).length;
+ v.kpis=[{l:"Bugun kelgan xodimlar",v:kel,sub:"jami "+s.emps.length+" xodimdan",k:"ok",ic:ic.users},{l:"Hozir korxonada",v:hoz,sub:"yuz tanish bo'yicha",k:"info",ic:ic.user},{l:"Ishga kech qolganlar",v:kech,sub:"grace: "+s.grace+" daq",k:"warn",ic:ic.clock},{l:"Ishga kelmaganlar",v:kelm,sub:"grafik bo'yicha",k:"danger",ic:ic.warn},{l:"Erta ketganlar",v:erta,sub:"grafikdan oldin",k:"warn",ic:ic.out},{l:"Bugungi avtomobillar",v:47,sub:"demo ma'lumot",k:"info",ic:ic.car},{l:"Kirishlar soni",v:63,sub:"demo ma'lumot",k:"ok",ic:ic.plus},{l:"Chiqishlar soni",v:38,sub:"demo ma'lumot",k:"neutral",ic:ic.out},{l:"Faol kameralar",v:camOn,sub:"jami "+s.cams.length+" ta",k:"ok",ic:ic.video},{l:"Ishlamayotgan kameralar",v:s.cams.length-camOn,sub:"aloqa uzilgan",k:"danger",ic:ic.warn},{l:"Aniqlangan noma'lum shaxslar",v:3,sub:"operator tekshiruvi kutilmoqda",k:"warn",ic:ic.face}];
+ const bi=[3,9,22,14,6,4,3,2,5,3], bo=[0,0,1,2,2,3,2,4,6,8];
+ v.bars=bi.map((x,i)=>({l:(7+i)+"",hi:Math.round(x/25*100),ho:Math.round(bo[i]/25*100)}));
+ const tot=rowsT.length, onT=cnt(r=>r.flag.ontime);
+ const seg=[[onT,"#16A34A","O'z vaqtida"],[kech,"#F59E0B","Kechikkan"],[kelm,"#DC2626","Kelmagan"],[tot-onT-kech-kelm,"#64748B","Dam olish / boshlanmagan"]];
+ let acc=0; const parts=seg.map(x=>{const a=acc/tot*100; acc+=x[0]; return x[1]+" "+a+"% "+(acc/tot*100)+"%";});
+ v.donut="background:conic-gradient("+parts.join(",")+")"; v.donutLeg=seg.map(x=>({n:x[0],c:x[1],l:x[2]}));
+ v.camHealth=s.cams.slice(0,6).map((c,i)=>({name:c.name,st:c.on?"Onlayn":"Oflayn",k:c.on?"ok":"danger",net:c.on?(["4.1","3.8","2.6","2.4","1.9","1.8"][i]+" Mbit/s"):"aloqa yo'q"}));
+ h.toAtt=()=>me.go("a-att"); h.toEmpList=()=>me.go("a-emp");
+ // employees list
+ const dpts=["Hammasi"].concat(Array.from(new Set(s.emps.map(e=>e.dept))));
+ v.deptOpts=dpts.map(d=>({label:d,cls:s.empDept===d?"on":"",pick:()=>me.setState({empDept:d})}));
+ const eq=(f.eq||"").trim().toLowerCase();
+ v.empRows=s.emps.filter(e=>(s.empDept==="Hammasi"||e.dept===s.empDept)&&(!eq||e.name.toLowerCase().indexOf(eq)>=0)).map(e=>({id:e.id.toUpperCase(),name:e.name,init:ini(e.name),col:colOf(e.id),pos:e.pos,dept:e.dept,groupName:grpOf(e.group).name,sched:me.effSched(e).name,ind:!!e.over,open:()=>me.setState({selEmp:e.id,screen:"a-empprof"}),del:()=>me.askDel("emp",e.id,e.name)}));
+ h.xlsImp=()=>me.toast("Demo: Excel shablon yuklanadi va xodimlar ommaviy import qilinadi");
+ h.xlsExp=()=>{me.toast("Demo: xodimlar ro'yxati Excel formatida eksport qilindi"); me.aud("Hisobot","Xodimlar ro'yxati eksport qilindi (Excel)");};
+ const openEdit=(e)=>{ me.setState(p=>({editEmp:e?e.id:"new",screen:"a-empedit",f:Object.assign({},p.f,e?{en:e.name,ep:e.pos,ed:e.dept,ephone:e.phone,ehire:e.hired,egroup:e.group,eover:e.over||""}:{en:"",ep:"",ed:"",ephone:"",ehire:"",egroup:"g1",eover:""})})); };
+ h.empNew=()=>openEdit(null);
+ const pe0=s.emps.find(e=>e.id===s.selEmp)||s.emps[0];
+ h.empEditSel=()=>openEdit(pe0); h.empDelSel=()=>me.askDel("emp",pe0.id,pe0.name);
+ const sch=me.effSched(pe0), pt=me.att(pe0,"today");
+ const dets=me.detsFor?me.detsFor(pe0):[];
+ const plan=me.planDays(sch), pct=plan?Math.round((plan-pe0.m[2])/plan*100):100;
+ const fqs=[96,93,91,88,85];
+ v.pe={id:pe0.id.toUpperCase(),name:pe0.name,init:ini(pe0.name),col:colOf(pe0.id),pos:pe0.pos,dept:pe0.dept,phone:pe0.phone,hired:pe0.hired,groupName:grpOf(pe0.group).name,schedName:sch.name,level:pe0.over?"Individual":sch.level,levelK:pe0.over?"info":"neutral",today:pt,pct:pct,late:pe0.m[0],early:pe0.m[1],abs:pe0.m[2],
+  faces:fqs.map(x=>({q:"Sifat "+x})),bio:"FT-"+(7000+parseInt(pe0.id.slice(1),10)*137).toString(36).toUpperCase()+"-••••",
+  week:[8,9,10,11,12,13,14].map((di,i)=>{const p=me.planFor(sch,di); return {d:["Du","Se","Ch","Pa","Ju","Sh","Ya"][i],txt:p.work?p.s.slice(0,2)+"–"+p.e.slice(0,2):"dam",st:p.work?"background:var(--infobg);color:var(--infotx)":"background:var(--nbg);color:var(--ntx)"};}),
+  dets:dets.slice(0,3).map(x=>({t:x.t,cam:(s.cams.find(c=>c.id===x.cam)||{}).name,conf:x.conf})),noDets:dets.length===0};
+ v.groupOpts=s.groups.map(g=>({id:g.id,name:g.name+" — "+g.dept}));
+ const schedOpts=s.schedules.map(x=>({id:x.id,name:x.name})); v.schedOptsEmp=[{id:"",name:"Guruh grafigidan meros olinadi"}].concat(schedOpts);
+ v.slots=["Old","Chap","O'ng","Yuqoridan","Yorug'lik 1","Yorug'lik 2"]; v.consent=!!s.consent;
+ h.addFace=()=>me.toast("Demo: yuz tasviri yuklash simulyatsiya qilinadi"); h.consent=()=>me.setState({consent:!me.state.consent});
+ h.empSave=()=>{ const f2=me.state.f; if(!f2.en){me.toast("F.I.Sh. kiritilmagan");return;}
+  me.setState(p=>{ const base={name:f2.en,pos:f2.ep||"—",dept:f2.ed||"Boshqaruv",group:f2.egroup,phone:f2.ephone||"—",hired:f2.ehire||"—",over:f2.eover||null};
+   if(p.editEmp==="new"){ const id="e"+(p.emps.length+1); return {emps:p.emps.concat([Object.assign({id,t:[null,null,0],y:[null,null,0],m:[0,0,0]},base)]),selEmp:id,screen:"a-empprof"}; }
+   return {emps:p.emps.map(x=>x.id===p.editEmp?Object.assign({},x,base):x),screen:"a-empprof"}; });
+  me.toast("Saqlandi (demo)"); me.aud("Sozlamalar","Xodim ma'lumoti saqlandi: "+f2.en); };
+ v.grpCards=s.groups.map(g=>{ const ms=s.emps.filter(e=>e.group===g.id); return {del:()=>me.askDel("group",g.id,g.name),name:g.name,dept:g.dept,count:ms.length,members:ms.map(e=>({init:ini(e.name),col:colOf(e.id),name:e.name})),sched:g.sched,opts:schedOpts,setS:(e)=>{const val=e.target.value; me.setState(p=>({groups:p.groups.map(x=>x.id===g.id?Object.assign({},x,{sched:val}):x)})); me.toast("Grafik guruhga biriktirildi"); me.aud("Sozlamalar","Guruh grafigi o'zgartirildi: "+g.name);}}; });
+ h.grAdd=()=>{ const n=(me.state.f.gname||"").trim(); if(!n){me.toast("Guruh nomini kiriting");return;} me.setState(p=>({groups:p.groups.concat([{id:"g"+(p.groups.length+1),name:n,dept:"Boshqaruv",sched:"s1"}]),f:Object.assign({},p.f,{gname:""})})); me.toast("Guruh yaratildi"); };
+ // ---- schedules / attendance / manager
+ Object.assign(sc,{aSched:S("a-sched"),aSchedNew:S("a-schednew"),aAtt:S("a-att"),mDash:S("m-dash")});
+ Object.assign(v.titles,{"a-sched":"Ish grafiklari","a-schednew":s.editing?"Grafikni tahrirlash":"Yangi grafik yaratish","a-att":"Davomat va monitoring","m-dash":"Bosh sahifa"});
+ const DY=["Du","Se","Ch","Pa","Ju","Sh","Ya"]; const TY={weekly:"Haftalik",shift:"Smenali",alt:"Kunora",every3:"3 kunda 1"}; const LK={Umumiy:"neutral",Guruh:"info",Individual:"warn"};
+ v.hier=[{n:"1",t:"Umumiy grafik",d:"Korxona yoki bo'lim uchun asosiy grafik",c:s.schedules.filter(x=>x.level==="Umumiy").length+" ta"},{n:"2",t:"Guruh / bo'lim grafigi",d:"Guruh xodimlari avtomatik oladi",c:s.groups.length+" guruh"},{n:"3",t:"Alohida xodim grafigi",d:"Istisno yoki vaqtinchalik grafik",c:s.emps.filter(e=>e.over).length+" xodim"}];
+ v.schList=s.schedules.map(x=>({name:x.name,type:TY[x.type],level:x.level,lk:LK[x.level]||"neutral",info:s.groups.filter(g=>g.sched===x.id).length+" guruh · "+s.emps.filter(e=>me.effSched(e).id===x.id).length+" xodim",cls:s.schedSel===x.id?"outline:2px solid var(--accent)":"",pick:()=>me.setState({schedSel:x.id})}));
+ const sd=s.schedules.find(x=>x.id===s.schedSel)||s.schedules[0]; v.sd=sd; v.grace=s.grace;
+ const cp=n=>(n<10?"0":"")+n; const sh=t=>t.replace(":00","");
+ v.wdNames=DY; v.isCal=(s.schedView||"cal")==="cal"; v.isTbl=!v.isCal;
+ v.viewOpts=[["cal","Kalendar"],["tbl","Jadval"]].map(o=>({label:o[1],cls:(s.schedView||"cal")===o[0]?"on":"",pick:()=>me.setState({schedView:o[0]})}));
+ const cal=[]; for(let i=0;i<6;i++) cal.push({day:"",txt:"",sub:"",st:"visibility:hidden"});
+ for(let di=0;di<30;di++){ const p=me.planFor(sd,di); cal.push({day:di+1,txt:p.work?sh(p.s)+"–"+sh(p.e)+(p.night?" +1":""):"dam",sub:p.n||"",st:(p.work?(p.night?"background:#334155;color:#fff":"background:var(--infobg);color:var(--infotx)"):"background:var(--nbg);color:var(--muted)")+(di===9?";outline:2px solid var(--accent)":"")}); }
+ v.cal=cal;
+ const durH=(p,brk)=>{ let d=me.mm(p.e)-me.mm(p.s); if(d<=0)d+=1440; return ((d-brk)/60).toFixed(1)+" soat"; };
+ v.tbl=[];for(let di=8;di<22;di++){ const p=me.planFor(sd,di); const dd=di+1; v.tbl.push({date:dd<=30?cp(dd)+".11.2026":cp(dd-30)+".12.2026",wd:DY[(di+6)%7],time:p.work?p.s+" – "+p.e+(p.night?" (+1 kun)":""):"Dam olish",hrs:p.work?durH(p,sd.brk||0):"—",note:p.n||(p.night?"Tungi smena":"")}); }
+ v.groupOpts=s.groups.map(g=>({id:g.id,name:g.name}));
+ v.empOpts=s.emps.map(e=>({id:e.id,name:e.name}));
+ h.schNew=()=>me.setState(p=>({editing:null,newType:"weekly",screen:"a-schednew",f:Object.assign({},p.f,{sn:"",sbrk:"60"}),wk:DY.map((d,i)=>({d,on:i<5,s:"09:00",e:"18:00"}))}));
+ h.toSched=()=>me.setState({screen:"a-sched",editing:null}); h.schDel=()=>me.askDel("sched",sd.id,sd.name);
+ h.schEdit=()=>me.setState(p=>({editing:sd.id,newType:sd.level==="Individual"?"ind":sd.type,screen:"a-schednew",wk:sd.days?sd.days.map(x=>Object.assign({},x)):p.wk,f:Object.assign({},p.f,{sn:sd.name,sbrk:String(sd.brk||0),soff:String(sd.shiftOffset||0),sday:String((sd.startDay||0)+1),sstart:sd.start||"08:00",send:sd.end||"20:00"})}));
+ h.asgG=()=>{ const g=me.state.f.agrp; me.setState(p=>({groups:p.groups.map(x=>x.id===g?Object.assign({},x,{sched:sd.id}):x)})); me.toast("Grafik guruhga biriktirildi: xodimlar avtomatik oladi"); me.aud("Sozlamalar","Guruhga grafik biriktirildi: "+sd.name); };
+ h.asgE=()=>{ const e=me.state.f.aemp; me.setState(p=>({emps:p.emps.map(x=>x.id===e?Object.assign({},x,{over:sd.id}):x)})); me.toast("Grafik xodimga individual biriktirildi"); me.aud("Sozlamalar","Xodimga individual grafik biriktirildi: "+sd.name); };
+ h.asgClear=()=>{ const e=me.state.f.aemp; me.setState(p=>({emps:p.emps.map(x=>x.id===e?Object.assign({},x,{over:null}):x)})); me.toast("Istisno olib tashlandi: guruh grafigi amal qiladi"); };
+ // new schedule form
+ const nT=s.newType||"weekly"; v.nt={week:nT==="weekly"||nT==="ind",ind:nT==="ind",shift:nT==="shift",cycle:nT==="alt"||nT==="every3"};
+ v.typeTabs=[["weekly","Haftalik"],["shift","Smenali"],["alt","Kunora"],["every3","3 kunda 1"],["ind","Individual"]].map(o=>({label:o[1],cls:nT===o[0]?"on":"",pick:()=>me.setState({newType:o[0]})}));
+ const wk=s.wk||[]; v.wkRows=wk.map((r,i)=>({d:r.d,on:r.on,s:r.s,e:r.e,tg:()=>me.setState(p=>({wk:p.wk.map((x,j)=>j===i?Object.assign({},x,{on:!x.on}):x)})),sc:(e)=>{const val=e.target.value; me.setState(p=>({wk:p.wk.map((x,j)=>j===i?Object.assign({},x,{s:val}):x)}));},ec:(e)=>{const val=e.target.value; me.setState(p=>({wk:p.wk.map((x,j)=>j===i?Object.assign({},x,{e:val}):x)}));}}));
+ h.pre5=()=>me.setState(p=>({wk:p.wk.map((x,j)=>Object.assign({},x,{on:j<5}))})); h.pre6=()=>me.setState(p=>({wk:p.wk.map((x,j)=>Object.assign({},x,{on:j<6}))}));
+ v.smenas=[{n:"1-smena",t:"06:00 – 14:00",d:"Ertalabki"},{n:"2-smena",t:"14:00 – 22:00",d:"Kunduzgi"},{n:"3-smena",t:"22:00 – 06:00 (+1)",d:"Tungi — keyingi kunda tugaydi"}];
+ v.cycleTxt=nT==="alt"?"1 kun ish / 1 kun dam":"Har 3 kunda 1 kun ish";
+ const dr=nT==="weekly"||nT==="ind"?{type:"weekly",days:wk}:nT==="shift"?{type:"shift",shiftOffset:+f.soff||0}:{type:nT,startDay:(+f.sday||1)-1,start:f.sstart||"08:00",end:f.send||"20:00"};
+ v.prev=[]; for(let di=8;di<22;di++){ const p=me.planFor(dr,di); v.prev.push({d:DY[(di+6)%7]+" "+(di+1<=30?di+1:di-29),txt:p.work?sh(p.s)+"–"+sh(p.e)+(p.night?"+1":""):"dam",st:p.work?(p.night?"background:#334155;color:#fff":"background:var(--infobg);color:var(--infotx)"):"background:var(--nbg);color:var(--muted)"}); }
+ h.schSave=()=>{ const st=me.state, f2=st.f, t=st.newType||"weekly"; const brk=+f2.sbrk||0; let o;
+  if(t==="weekly"||t==="ind") o={type:"weekly",days:st.wk.map(x=>Object.assign({},x)),brk}; else if(t==="shift") o={type:"shift",shiftOffset:+f2.soff||0,brk}; else o={type:t,startDay:(+f2.sday||1)-1,start:f2.sstart,end:f2.send,brk};
+  const emp=st.emps.find(e=>e.id===f2.sEmp); const nm=f2.sn||(t==="ind"?"Individual: "+(emp?emp.name:""):"Yangi grafik");
+  me.setState(p=>{ const id=p.editing||("s"+(p.schedules.length+1)); const old=p.schedules.find(x=>x.id===id); const obj=Object.assign({id,name:nm,level:t==="ind"?"Individual":(old?old.level:"Umumiy")},o); const list=old?p.schedules.map(x=>x.id===id?obj:x):p.schedules.concat([obj]); const emps=t==="ind"?p.emps.map(e=>e.id===f2.sEmp?Object.assign({},e,{over:id}):e):p.emps; return {schedules:list,emps,schedSel:id,editing:null,screen:"a-sched"}; });
+  me.toast("Grafik saqlandi"+(t==="ind"?" va xodimga biriktirildi":"")); me.aud("Sozlamalar","Ish grafigi saqlandi: "+nm); };
+ // attendance
+ const aflt={all:()=>true,ontime:r=>r.flag.ontime,late:r=>r.flag.late||r.flag.excused,excused:r=>r.flag.excused,absent:r=>r.flag.absent,early:r=>r.flag.early,extra:r=>r.flag.extra};
+ const day=s.attDay; const aq=(f.aq||"").trim().toLowerCase();
+ const base=s.emps.filter(e=>(s.attDept==="Hammasi"||e.dept===s.attDept)&&(!aq||e.name.toLowerCase().indexOf(aq)>=0)).map(e=>me.att(e,day));
+ const chips=[["all","Hammasi"],["ontime","O'z vaqtida"],["late","Kechikkan"],["excused","Sababli kechikish"],["absent","Kelmadi"],["early","Erta ketdi"],["extra","Qo'shimcha ish"]];
+ v.attChips=chips.map(c=>({label:c[1],n:base.filter(aflt[c[0]]).length,cls:s.attFilter===c[0]?"on":"",pick:()=>me.setState({attFilter:c[0]})}));
+ v.attRows=base.filter(aflt[s.attFilter]||aflt.all).map(r=>({name:r.e.name,dept:r.e.dept,sched:r.sc.name,plan:r.plan,arr:r.arr||"—",lev:r.lev||"—",ik:r.ik,it:r.it,ok:r.ok,ot:r.ot}));
+ v.dayOpts=[["today","Bugun · 10.11.2026"],["yesterday","Kecha · 09.11.2026"]].map(o=>({label:o[1],cls:day===o[0]?"on":"",pick:()=>me.setState({attDay:o[0]})}));
+ v.deptNames=["Hammasi"].concat(Array.from(new Set(s.emps.map(e=>e.dept)))); v.attDept=s.attDept; h.attDept=(e)=>me.setState({attDept:e.target.value});
+ v.mKpis=v.kpis.slice(0,5);
+ v.mLate=rowsT.filter(r=>r.flag.late||r.flag.excused||r.flag.early||r.flag.absent).map(r=>({name:r.e.name,t:r.flag.early?r.ot:r.it,k:r.flag.early?r.ok:r.ik}));
+ v.mCars=this.EV.filter(x=>x.ic==="car"); v.mSec=this.EV.filter(x=>x.k==="warn"||x.k==="danger");
+ h.toRep=()=>me.go("a-reports");
+ // ---- cameras / map / face
+ Object.assign(sc,{aCams:S("a-cams"),aCamEdit:S("a-camedit"),aMap:S("a-map"),aFace:S("a-face")});
+ Object.assign(v.titles,{"a-cams":"Kamera boshqaruvi","a-camedit":s.camEditId?"Kamerani sozlash":"Kamera qo'shish","a-map":"Kamera hududlari va korxona xaritasi","a-face":"Face Recognition — xodimni yuz orqali qidirish"});
+ const AIK=["Face Recognition","Face Detection","ANPR / LPR","Motion Detection","Person Detection"];
+ v.camRows=s.cams.filter(c=>s.camArea==="Hammasi"||c.area===s.camArea).map((c,i)=>({name:c.name,loc:c.loc,area:c.area,ip:c.ip||"192.168.10."+(11+s.cams.indexOf(c)),ai:c.ai.join(", "),bit:c.on?(c.bit||(["4.1","3.8","2.6","2.4","1.9","1.8"][s.cams.indexOf(c)%6])+" Mbit/s"):"—",loss:c.on?(c.loss||"0.1%"):"100%",rec:c.on?"Yozilmoqda":"To'xtagan",recK:c.on?"ok":"danger",st:c.on?"Onlayn":"Oflayn",k:c.on?"ok":"danger",del:()=>me.askDel("cam",c.id,c.name),edit:()=>me.setState(p=>({camEditId:c.id,screen:"a-camedit",camDir:c.dir||"Ichki hudud",camAI:c.ai.reduce((o,a)=>{o[a==="ANPR"?"ANPR / LPR":a]=true;return o;},{}),f:Object.assign({},p.f,{cn:c.name,cip:c.ip||"",crtsp:c.rtsp||"",clog:"",cpass:"",carea:c.area})}))}));
+ v.areaNames=Array.from(new Set(s.cams.map(c=>c.area)));
+ const cd=s.camDir||"Kirish nuqtasi"; v.dirOpts=["Kirish nuqtasi","Chiqish nuqtasi","Ichki hudud"].map(o=>({label:o,cls:cd===o?"on":"",pick:()=>me.setState({camDir:o})}));
+ const ca=s.camAI||{}; v.aiOpts=AIK.map(a=>({label:a,on:!!ca[a],cls:ca[a]?"on":"",pick:()=>me.setState(p=>({camAI:Object.assign({},p.camAI||{},{[a]:!(p.camAI||{})[a]})}))}));
+ const ov=s.onvif||"idle"; v.onvifBtn=ov==="scan"?"Qidirilmoqda…":"ONVIF qurilmalarini qidirish";
+ v.onvifList=ov==="found"?[{n:"IPC-Dome-A1",ip:"192.168.10.41"},{n:"IPC-Bullet-B2",ip:"192.168.10.42"},{n:"IPC-PTZ-C3",ip:"192.168.10.43"}].map(d=>({n:d.n,ip:d.ip,pick:()=>me.setState(p=>({f:Object.assign({},p.f,{cn:p.f.cn||d.n,cip:d.ip,crtsp:"rtsp://"+d.ip+":554/stream1"})}))})):[];
+ h.onvif=()=>{ me.setState({onvif:"scan"}); setTimeout(()=>me.setState({onvif:"found"}),1200); };
+ h.toCamList=()=>me.setState({screen:"a-cams",camEditId:null}); h.toCamNew=()=>me.setState(p=>({screen:"a-camedit",camEditId:null,camDir:"Kirish nuqtasi",camAI:{},onvif:"idle",f:Object.assign({},p.f,{cn:"",cip:"",crtsp:"",clog:"",cpass:""})}));
+ h.camSave=()=>{ const st=me.state,f2=st.f; if(!f2.cn){me.toast("Kamera nomini kiriting");return;} const ai=AIK.filter(a=>(st.camAI||{})[a]); const fc=ai.indexOf("Face Recognition")>=0||ai.indexOf("Face Detection")>=0;
+  me.setState(p=>{ const o={name:f2.cn,loc:f2.carea+" · "+(p.camDir||""),area:f2.carea,ip:f2.cip,rtsp:f2.crtsp,dir:p.camDir,ai:ai.length?ai:["Motion Detection"],on:true,q:"HD",zone:"kirish",box:ai.indexOf("ANPR / LPR")>=0?"plate":fc?"face":ai.indexOf("Person Detection")>=0?"person":""};
+   if(p.camEditId) return {cams:p.cams.map(c=>c.id===p.camEditId?Object.assign({},c,o):c),screen:"a-cams",camEditId:null};
+   return {cams:p.cams.concat([Object.assign({id:"c"+(p.cams.length+1)},o)]),screen:"a-cams"}; });
+  me.toast(st.camEditId?"Kamera sozlamalari saqlandi":"Kamera qo'shildi — multi-kamera monitoringda yangi video blok yaratildi"); me.aud("Sozlamalar","Kamera saqlandi: "+f2.cn); };
+ // map
+ const ZN=[["darvoza","Darvoza",2,66,15,24],["kirish","Asosiy kirish",19,66,16,24],["admin","Ma'muriy bino",3,9,26,30],["oshxona","Oshxona",32,9,14,26],["sex1","1-sex",50,9,26,34],["sex2","2-sex",50,47,26,32],["ombor","Ombor",80,9,17,34],["hovli","Yuklash maydoni",80,47,17,32],["perim_n","Shimoliy perimetr",3,1,94,5],["perim_s","Janubiy perimetr",3,94,94,5]];
+ const meE=s.emps.find(e=>e.id===(s.mapEmp||"e1"))||s.emps[0]; const mDets=me.detsFor(meE); const lastZ=mDets.length?(s.cams.find(c=>c.id===mDets[0].cam)||{}).zone:null;
+ v.mapEmp=meE.id; h.mapEmp=(e)=>me.setState({mapEmp:e.target.value});
+ v.zones=ZN.map(z=>({name:z[1],st:"left:"+z[2]+"%;top:"+z[3]+"%;width:"+z[4]+"%;height:"+z[5]+"%;"+(z[0]===lastZ?"background:rgba(37,99,235,.2);border:2px solid var(--accent);color:var(--text)":"border:1px dashed var(--border);color:var(--muted)")}));
+ const zc=id=>{const z=ZN.find(x=>x[0]===id)||ZN[2]; return [z[2]+z[4]/2,z[3]+z[5]/2];};
+ const cntZ={}; v.pins=s.cams.map(c=>{ const k=cntZ[c.zone]||0; cntZ[c.zone]=k+1; const p=zc(c.zone); return {name:c.name,st:"left:"+(p[0]+k*5-2)+"%;top:"+(p[1]+8)+"%;background:"+(c.on?"#16A34A":"#DC2626"),pick:()=>me.setState({mapCam:c.id})}; });
+ const mp=lastZ?zc(lastZ):[0,0]; v.mk={show:!!lastZ,none:!lastZ,name:meE.name,init:ini(meE.name),col:colOf(meE.id),st:"left:"+(mp[0]+4)+"%;top:"+(mp[1]-8)+"%",last:lastZ?"Oxirgi aniqlangan hudud: "+(ZN.find(x=>x[0]===lastZ)||[])[1]+", "+mDets[0].t:"Oxirgi hudud yo'q"};
+ v.mapSeq=mDets.slice().reverse().map(x=>({t:x.t,cam:(s.cams.find(c=>c.id===x.cam)||{}).name,conf:x.conf,k:x.conf>=s.faceThr?"ok":"warn"}));
+ const pc=s.cams.find(c=>c.id===s.mapCam); v.pinInfo=pc?{show:true,name:pc.name,loc:pc.loc,st:pc.on?"Onlayn":"Oflayn",k:pc.on?"ok":"danger",ai:pc.ai.join(", ")}:{show:false};
+ // face search
+ v.thr=s.faceThr||85; const thr=v.thr; const fq=(f.fq||"").trim().toLowerCase();
+ v.faceList=s.emps.filter(e=>!fq||e.name.toLowerCase().indexOf(fq)>=0).map(e=>{const d=me.detsFor(e); return {name:e.name,init:ini(e.name),col:colOf(e.id),last:d.length?d[0].t+" · "+(s.cams.find(c=>c.id===d[0].cam)||{}).name:"Bugun aniqlanmagan",st:s.faceEmp===e.id||(!s.faceEmp&&e.id==="e1")?"outline:2px solid var(--accent)":"",pick:()=>me.setState({faceEmp:e.id})};});
+ const fe0=s.emps.find(e=>e.id===(s.faceEmp||"e1"))||s.emps[0]; const fd=me.detsFor(fe0); const dec=s.faceDec||{};
+ const stOf=x=>x.conf>=thr?{k:"ok",l:"Tasdiqlangan"}:dec[x.id]==="ok"?{k:"info",l:"Operator tasdiqladi"}:dec[x.id]==="no"?{k:"neutral",l:"Rad etildi"}:{k:"warn",l:"Tekshiruv kerak"};
+ const l0=fd[0]; const l0s=l0?stOf(l0):null;
+ v.fe={name:fe0.name,pos:fe0.pos+" · "+fe0.dept,has:!!l0,none:!l0,t:l0?l0.t:"",cam:l0?(s.cams.find(c=>c.id===l0.cam)||{}).name:"",area:l0?(s.cams.find(c=>c.id===l0.cam)||{}).area:"",conf:l0?l0.conf:0,bar:l0&&l0.conf>=thr?"var(--ok)":"var(--warn)",k:l0s?l0s.k:"neutral",state:l0s?l0s.l:"Aniqlanmagan",review:!!l0&&l0s.l==="Tekshiruv kerak",
+  ok:()=>me.setState(p=>({faceDec:Object.assign({},p.faceDec||{},{[l0.id]:"ok"})})),no:()=>me.setState(p=>({faceDec:Object.assign({},p.faceDec||{},{[l0.id]:"no"})})),
+  hist:fd.map(x=>({t:x.t,cam:(s.cams.find(c=>c.id===x.cam)||{}).name,area:(s.cams.find(c=>c.id===x.cam)||{}).area,conf:x.conf,k:stOf(x).k,state:stOf(x).l}))};
+ { // ---- anpr / reports / users / audit / settings / guard search
+ Object.assign(sc,{aAnpr:S("a-anpr"),aReports:S("a-reports"),aUsers:S("a-users"),aAudit:S("a-audit"),aSettings:S("a-settings")});
+ Object.assign(v.titles,{"a-anpr":"ANPR / LPR — avtomobillarni aniqlash","a-reports":"Hisobotlar","a-users":"Foydalanuvchilar va rollar","a-audit":"Audit log","a-settings":"Tizim sozlamalari"});
+ const VH=me.VH, tab=s.anprTab||"events", pqs=(f.pq||"").replace(/\s/g,"").toLowerCase();
+ const added=s.anprAdded||[];
+ const sv0=VH.find(x=>x.id===(s.anprSel||"v1"))||VH[0]; const isAdd=added.indexOf(sv0.id)>=0;
+ const sv=Object.assign({},sv0,isAdd?{st:"Ruxsat berilgan",k:"ok"}:{}); sv.dk=sv.dir==="Kirdi"?"ok":"neutral"; sv.unknown=sv.k==="warn";
+ v.anprTabs=[["events","Hodisalar"],["allow","Ruxsat berilgan ro'yxat"],["stats","Statistika"]].map(o=>({label:o[1],cls:tab===o[0]?"on":"",pick:()=>me.setState({anprTab:o[0]})}));
+ v.anpr={ev:tab==="events",allow:tab==="allow",stats:tab==="stats",sel:sv,
+  rows:VH.filter(x=>!pqs||x.plate.replace(/\s/g,"").toLowerCase().indexOf(pqs)>=0).map(x=>({plate:x.plate,t:x.t,dir:x.dir,dk:x.dir==="Kirdi"?"ok":"neutral",cam:x.cam,who:x.who,st:added.indexOf(x.id)>=0?"Ruxsat berilgan":x.st,k:added.indexOf(x.id)>=0?"ok":x.k,pick:()=>me.setState({anprSel:x.id})})),
+  allowRows:VH.filter(x=>x.k!=="warn"||added.indexOf(x.id)>=0).map(x=>({plate:x.plate,who:x.who,type:x.k==="info"?"Mehmon":x.who.indexOf("Kompaniya")===0?"Kompaniya":"Xodim",until:x.k==="info"?"10.11.2026 12:00 gacha":"Doimiy"})),
+  kpis:[{l:"Kirgan avtomobillar",v:VH.filter(x=>x.dir==="Kirdi").length},{l:"Chiqqan avtomobillar",v:VH.filter(x=>x.dir==="Chiqdi").length},{l:"Ro'yxatda yo'q",v:VH.filter(x=>x.k==="warn"&&added.indexOf(x.id)<0).length},{l:"Vaqtinchalik ruxsat",v:VH.filter(x=>x.k==="info").length}]};
+ h.anprCheck=()=>me.toast("Operator tekshiruvi so'rovi yuborildi"); h.anprAllow=()=>{ me.setState(p=>({anprAdded:(p.anprAdded||[]).concat([sv0.id])})); me.toast("Avtomobil ruxsat ro'yxatiga qo'shildi"); me.aud("Sozlamalar","Ruxsat ro'yxatiga qo'shildi: "+sv0.plate); };
+ // reports
+ const REP=[["r1","Kunlik davomat"],["r2","Haftalik davomat"],["r3","Oylik davomat"],["r4","Xodimlar kesimida hisobot"],["r5","Bo'limlar kesimida hisobot"],["r6","Grafik bo'yicha bajarilish"],["r7","Kechikishlar hisoboti"],["r8","Erta ketishlar hisoboti"],["r9","Avtomobillar hisoboti"],["r10","Xavfsizlik hodisalari hisoboti"]];
+ const rid=s.repSel||"r1", rdept=s.repDept||"Hammasi"; const rE=s.emps.filter(e=>rdept==="Hammasi"||e.dept===rdept);
+ const netH=c=>{ if(c.type==="shift") return 7.5; if(c.type==="weekly"){ const on=c.days.filter(d=>d.on); if(!on.length) return 8; let t=0; on.forEach(d=>{let x=me.mm(d.e)-me.mm(d.s); if(x<=0)x+=1440; t+=x;}); return (t/on.length-(c.brk||0))/60; } let x=me.mm(c.end)-me.mm(c.start); if(x<=0)x+=1440; return (x-(c.brk||0))/60; };
+ const sm=e=>{ const c=me.effSched(e), plan=me.planDays(c); return {c,plan,late:e.m[0],early:e.m[1],abs:e.m[2],pct:plan?Math.round((plan-e.m[2])/plan*100):100}; };
+ const pk=e=>()=>me.setState({repEmp:e.id}); const nop=()=>{};
+ const mk=(first,rest,pick)=>({first:first,rest:rest,pick:pick||nop});
+ let cols=[],rows=[],note="Demo ma'lumotlar · davr: oktyabr 2026";
+ if(rid==="r1"){ cols=["Xodim","Grafik","Reja","Kirish","Chiqish","Holat"]; rows=rE.map(e=>{const a=me.att(e,"today"); return mk(e.name,[a.sc.name,a.plan,a.arr||"—",a.lev||"—",a.it+" / "+a.ot],pk(e));}); note="Bugun, 10.11.2026"; }
+ else if(rid==="r2"){ cols=["Xodim","Bo'lim","Reja kun","Kelgan","Kechikish","Erta ketish","Kelmagan","Davomat %"]; rows=rE.map(e=>{const c=me.effSched(e); let pl=0; for(let d=2;d<=8;d++){ if(me.planFor(c,d).work) pl++; } const ab=Math.min(e.m[2],1), pc=pl?Math.round((pl-ab)/pl*100):100; return mk(e.name,[e.dept,pl,pl-ab,Math.min(e.m[0],1),Math.min(e.m[1],1),ab,pc+"%"],pk(e));}); note="Demo ma'lumotlar · hafta: 3–9 noyabr 2026"; }
+ else if(rid==="r3"||rid==="r4"){ cols=["Xodim","Bo'lim","Reja kun","Kelgan","Kechikish","Erta ketish","Kelmagan","Davomat %"]; rows=rE.map(e=>{const m=sm(e); return mk(e.name,[e.dept,m.plan,m.plan-m.abs,m.late,m.early,m.abs,m.pct+"%"],pk(e));}); }
+ else if(rid==="r5"){ cols=["Bo'lim","Xodimlar","O'rtacha davomat %","Kechikish","Erta ketish","Kelmagan kun"]; Array.from(new Set(rE.map(e=>e.dept))).forEach(d=>{ const g=rE.filter(e=>e.dept===d).map(sm); const n=g.length; rows.push(mk(d,[n,Math.round(g.reduce((a,x)=>a+x.pct,0)/n)+"%",g.reduce((a,x)=>a+x.late,0),g.reduce((a,x)=>a+x.early,0),g.reduce((a,x)=>a+x.abs,0)])); }); }
+ else if(rid==="r6"){ cols=["Grafik","Xodimlar","Reja soat","Haqiqiy soat","Bajarilish %"]; s.schedules.forEach(c=>{ const g=rE.filter(e=>me.effSched(e).id===c.id).map(sm); if(!g.length) return; const ph=g.reduce((a,x)=>a+x.plan,0)*netH(c), rh=g.reduce((a,x)=>a+x.plan-x.abs,0)*netH(c); rows.push(mk(c.name,[g.length,Math.round(ph),Math.round(rh),Math.round(rh/ph*100)+"%"])); }); }
+ else if(rid==="r7"){ cols=["Xodim","Bo'lim","Kechikishlar soni","Sababli","Sababsiz"]; rows=rE.filter(e=>e.m[0]>0).sort((a,b)=>b.m[0]-a.m[0]).map(e=>mk(e.name,[e.dept,e.m[0],Math.floor(e.m[0]/3),e.m[0]-Math.floor(e.m[0]/3)],pk(e))); }
+ else if(rid==="r8"){ cols=["Xodim","Bo'lim","Erta ketishlar soni","Taxminiy jami (daq)"]; rows=rE.filter(e=>e.m[1]>0).sort((a,b)=>b.m[1]-a.m[1]).map(e=>mk(e.name,[e.dept,e.m[1],e.m[1]*35],pk(e))); }
+ else if(rid==="r9"){ cols=["Davlat raqami","Egasi","Yo'nalish","Vaqt","Holat"]; rows=VH.map(x=>mk(x.plate,[x.who,x.dir,x.t,x.st])); note="Bugun, 10.11.2026 · demo ma'lumotlar"; }
+ else { cols=["Vaqt","Hodisa","Kamera","Toifa"]; rows=me.EV.filter(x=>x.k==="warn"||x.k==="danger").map(x=>mk(x.t,[x.txt,x.cam,x.tag])); note="Bugun, 10.11.2026 · demo ma'lumotlar"; }
+ const rtitle=(REP.find(r=>r[0]===rid)||[])[1];
+ v.rp={title:rtitle,cols:cols,rows:rows,note:note}; v.repDept=rdept;
+ v.repList=REP.map((r,i)=>({n:i+1,name:r[1],cls:rid===r[0]?"on":"",pick:()=>me.setState({repSel:r[0]})}));
+ h.repDept=(e)=>me.setState({repDept:e.target.value});
+ const empRep=["r1","r2","r3","r4","r7","r8"].indexOf(rid)>=0; const re0=s.emps.find(e=>e.id===(s.repEmp||"e1"))||s.emps[0]; const rm=sm(re0);
+ const dayRow=(dd,lbl)=>{const a=me.att(re0,dd); return {d:lbl,plan:a.plan,arr:a.arr||"—",lev:a.lev||"—",st:a.flag.off?"Dam olish":a.flag.pending?"Kutilmoqda":(a.flag.absent?"Kelmadi":a.ik==="ok"&&a.ok!=="warn"?"Grafik bo'yicha":(a.flag.early?a.ot:a.it)),k:a.flag.absent?"danger":(a.flag.late||a.flag.early?"warn":a.flag.off||a.flag.pending?"neutral":"ok")};};
+ v.rpe={show:empRep,name:re0.name,sched:rm.c.name,pct:rm.pct,late:rm.late,abs:rm.abs,planH:Math.round(rm.plan*netH(rm.c)),realH:Math.round((rm.plan-rm.abs)*netH(rm.c)),days:[dayRow("yesterday","09.11.2026"),dayRow("today","10.11.2026")]};
+ const ex=s.exp; const rfile=(rtitle||"hisobot").toLowerCase().replace(/[^a-z0-9]+/g,"_");
+ v.exp={show:!!ex,pct:ex?ex.pct:0,txt:ex?(ex.pct<100?"Tayyorlanmoqda ("+ex.fmt+")… "+ex.pct+"%":"Tayyor: "+rfile+"."+(ex.fmt==="PDF"?"pdf":"xlsx")+" — demo, haqiqiy fayl yaratilmaydi"):""};
+ const startExp=(fmt)=>{ const cur=me.state.exp; if(cur&&cur.pct<100) return; me.setState({exp:{fmt:fmt,pct:0}}); const stp=()=>{ const e0=me.state.exp; if(!e0) return; const n=Math.min(100,e0.pct+20); me.setState({exp:{fmt:fmt,pct:n}}); if(n<100) setTimeout(stp,300); else me.aud("Hisobot","Hisobot eksport qilindi ("+fmt+"): "+rtitle); }; setTimeout(stp,300); };
+ h.expPdf=()=>startExp("PDF"); h.expXls=()=>startExp("Excel");
+ // users
+ const ulist=s.users||me.USERS0; v.users=ulist.map(u=>({del:()=>me.askDel("user",u.login,u.name),login:u.login,name:u.name,role:u.role,tw:u.twofa?"Yoqilgan":"Yoqilmagan",tk:u.twofa?"ok":"neutral",last:u.last,st:u.st}));
+ v.matrix=[["Qorovul paneli, shlagbaum, kamera monitoringi","Ha","Ha","—"],["Xodimlar va ish grafiklari","—","Ha","—"],["Kamera va hududlar sozlamasi","—","Ha","—"],["Face / ANPR qidiruvi","Cheklangan","Ha","—"],["Davomat va hisobotlar","—","Ha","Faqat ko'rish"],["Video arxiv (ko'rish va eksport qayd etiladi)","Ha","Ha","—"],["Foydalanuvchilar, sozlamalar, audit log","—","Ha","—"]].map(r=>({m:r[0],a:r[1],b:r[2],c:r[3]}));
+ const gone=s.sessGone||[]; v.sessions=me.SESS0.filter(x=>gone.indexOf(x.id)<0).map(x=>({u:x.u,dev:x.dev,since:x.since,kill:()=>{me.setState(p=>({sessGone:(p.sessGone||[]).concat([x.id])})); me.toast("Sessiya tugatildi"); me.aud("Sozlamalar","Sessiya tugatildi: "+x.u,"warn");}}));
+ h.genPass=()=>me.setF("upass",Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6).toUpperCase());
+ h.userAdd=()=>{ const f2=me.state.f; if(!f2.uname||!f2.ulogin||!f2.upass){me.toast("Barcha maydonlarni to'ldiring");return;} const rl={guard:"Qorovul",admin:"Administrator",manager:"Mas'ul shaxs"}[f2.urole];
+  me.setState(p=>({users:(p.users||me.USERS0).concat([{login:f2.ulogin,name:f2.uname,role:rl,twofa:false,last:"—",st:"Faol"}]),f:Object.assign({},p.f,{uname:"",ulogin:"",upass:""})})); me.toast("Foydalanuvchi yaratildi (parol xeshlanadi)"); me.aud("Sozlamalar","Foydalanuvchi yaratildi: "+f2.ulogin); };
+ // audit
+ const af=s.auditF||"all"; const alist=s.audit.concat(me.AUD0);
+ v.auditChips=[["all","Barchasi"],["Shlagbaum","Shlagbaum"],["Video","Video ko'rish / eksport"],["Kirish","Kirish urinishlari"],["Sozlamalar","Sozlamalar"],["Hisobot","Hisobotlar"]].map(o=>({label:o[1],cls:af===o[0]?"on":"",pick:()=>me.setState({auditF:o[0]})}));
+ v.auditRows=alist.filter(r=>af==="all"||r.cat===af);
+ // settings
+ v.arcDays=s.arcDays||"30"; h.arcDays=(e)=>me.setState({arcDays:e.target.value});
+ h.grace=(e)=>me.setState({grace:Math.max(0,+e.target.value||0)}); h.faceThr=(e)=>me.setState({faceThr:+e.target.value});
+ const tg=(key,l,on,fn)=>({l:l,on:on,txt:on?"Yoq":"O'ch",st:on?"background:var(--ok);border-color:var(--ok);color:#052e16":"",pick:fn||(()=>me.setState({[key]:!on}))});
+ v.togs=[tg("opConfirm","Operator tasdiqi (past ishonchlilik)",s.opConfirm!==false),tg("twofa","Administrator uchun 2FA",s.twofa!==false),tg("offline","Internet aloqasini uzish (demo)",s.offline,()=>{me.setState({offline:!me.state.offline,pend:0}); me.toast(me.state.offline?"Aloqa tiklandi":"Oflayn rejim: hodisalar lokal qayd etiladi");})];
+ v.arch=[{n:"IP kameralar",d:"RTSP / ONVIF oqimlari",s:camOn+" ta onlayn",k:"ok"},{n:"Edge Gateway (Raspberry Pi)",d:"Lokal qayd va qurilma boshqaruvi",s:s.offline?"Lokal rejim":"Onlayn",k:s.offline?"warn":"ok"},{n:"Lokal xotira",d:"Vaqtinchalik video va hodisalar",s:"Faol",k:"ok"},{n:"Markaziy server",d:"Ma'lumotlar bazasi, API, hisobotlar",s:s.offline?"Aloqa yo'q":"Sinxronlangan",k:s.offline?"danger":"ok"},{n:"Klientlar",d:"Windows, Android, Web",s:"Faol",k:"ok"}];
+ h.sync=()=>{ me.setState({pend:0}); me.toast("Sinxronlash simulyatsiya qilindi"); };
+ // guard quick search
+ const gq=(f.gq||"").trim().toLowerCase(), gqp=gq.replace(/\s/g,""); const gr=[];
+ if(gq){ s.emps.filter(e=>e.name.toLowerCase().indexOf(gq)>=0).slice(0,3).forEach(e=>{ const d=me.detsFor(e), a=me.att(e,"today"); gr.push({title:e.name,sub:d.length?"Oxirgi: "+d[0].t+" · "+(s.cams.find(c=>c.id===d[0].cam)||{}).name:"Bugun aniqlanmagan",init:ini(e.name),col:colOf(e.id),k:a.arr&&!a.lev?"ok":"neutral",state:a.arr&&!a.lev?"Korxonada":a.lev?"Chiqib ketgan":"Aniqlanmagan"}); });
+  VH.filter(x=>x.plate.replace(/\s/g,"").toLowerCase().indexOf(gqp)>=0).slice(0,3).forEach(x=>gr.push({title:x.plate,sub:x.who+" · "+x.dir+" "+x.t,init:"AV",col:"#334155",k:x.k,state:x.st})); }
+ v.gsRes=gr; v.gsEmpty=!!gq&&gr.length===0;
+ }
+ { // ---- player / archive
+ Object.assign(sc,{gPlayer:S("g-player"),gArchive:S("g-archive")});
+ Object.assign(v.titles,{"g-player":"Kamera pleyeri","g-archive":"Video arxiv"});
+ const live=s.live!==false, playing=s.playing!==false, spd=s.speed||1, pos=s.pos==null?40.4:s.pos, shown=live?s.sec/864:pos;
+ const pcam=s.cams.find(c=>c.id===s.selCam)||s.cams[0]; const pm=mkCam(pcam,s.cams.indexOf(pcam));
+ v.pv={name:pcam.name,loc:pcam.loc,q:pcam.q,ai:pcam.ai.join(", "),style:pm.style,box:pm.box,boxLbl:pm.boxLbl,sync:!!s.sync,single:!s.sync,multi:!!s.sync,
+  mode:live?"LIVE":"ARXIV",modeBg:live?"#DC2626":"#475569",speedTxt:live?"1×":spd+"×",time:me.hms(Math.round(shown*864)),pos:shown,
+  playIc:live||playing?ic.pause:ic.play,volIc:s.muted===false?ic.vol:ic.mute,syncBg:s.sync?"#2563EB":"#1E293B",
+  syncCams:s.cams.slice(0,4).map((c,i)=>mkCam(c,i))};
+ v.speeds=[0.25,0.5,1,2,4,8].map(x=>({label:x+"×",st:!live&&spd===x?"background:#2563EB;color:#fff;border-color:#2563EB":"background:#1E293B;color:#fff;border-color:#475569",pick:()=>me.setState({speed:x,live:false})}));
+ v.segs=[{l:0,w:24},{l:24.4,w:16}];
+ const MK=[["05:58","Xodim kirib keldi","#16A34A"],["07:50","Xodim kirib keldi","#16A34A"],["08:49","Avtomobil kirdi","#2563EB"],["09:12","Xodim chiqib ketdi","#94A3B8"],["09:20","Avtomobil kirdi","#2563EB"],["09:36","Noma'lum shaxs aniqlandi","#F59E0B"]];
+ v.marks=MK.map(m=>{ const p=me.mm(m[0])/14.4; return {t:m[0],txt:m[1],label:m[0]+" "+m[1],c:m[2],l:p,go:()=>me.setState({pos:p,live:false,playing:true})}; });
+ h.seek=(e)=>me.setState({pos:+e.target.value,live:false});
+ h.live=()=>me.setState({live:true,playing:true,speed:1});
+ h.play=()=>{ const st=me.state; if(st.live!==false) me.setState({live:false,playing:false,pos:st.sec/864}); else me.setState({playing:st.playing===false}); };
+ h.stop=()=>me.setState({playing:false,live:false});
+ h.back=()=>me.setState(p=>({live:false,pos:Math.max(0,(p.live!==false?p.sec/864:(p.pos==null?40.4:p.pos))-0.35)}));
+ h.fwd=()=>me.setState(p=>({live:false,pos:Math.min(100,(p.live!==false?p.sec/864:(p.pos==null?40.4:p.pos))+0.35)}));
+ h.sync2=()=>me.setState({sync:!me.state.sync}); h.mute=()=>me.setState({muted:me.state.muted===false});
+ h.popout=()=>me.toast("Demo: kamera alohida oynada ochiladi"); h.fs=()=>me.toast("Demo: to'liq ekran rejimi");
+ h.snap=()=>{ me.toast("Snapshot olindi (demo)"); me.aud("Video","Snapshot olindi: "+pcam.name); };
+ h.clip=()=>{ me.toast("Video yozuv eksport qilindi (demo)"); me.aud("Video","Video yozuv saqlandi/eksport: "+pcam.name); };
+ const cqq=(f.cq||"").trim().toLowerCase();
+ v.pcams=s.cams.filter(c=>!cqq||(c.name+" "+c.loc).toLowerCase().indexOf(cqq)>=0).map(c=>({name:c.name,loc:c.loc,dot:c.on?"#16A34A":"#DC2626",st:c.id===s.selCam?"outline:2px solid var(--accent)":"",pick:()=>me.setState({selCam:c.id})}));
+ // archive
+ const CL=[["a1","09:41","00:30","c3","Xodim","ok","Aziz Karimov kirib keldi","face"],["a2","09:38","00:25","c1","Avtomobil","info","01 A 123 AB kirdi","car"],["a3","09:36","00:42","c3","Noma'lum shaxs","warn","Noma'lum shaxs aniqlandi (tasdiqlanmagan)","face"],["a4","09:34","00:20","c1","Shlagbaum","info","Shlagbaum ochildi","gateOpen"],["a5","09:21","—","c12","Aloqa","danger","Kamera aloqasi uzildi","video"],["a6","09:14","00:28","c2","Avtomobil","neutral","01 F 111 MN chiqdi","car"],["a7","09:12","00:30","c3","Xodim","neutral","Zilola Hasanova chiqib ketdi","face"],["a8","08:49","00:26","c1","Avtomobil","info","01 A 123 AB kirdi","car"],["a9","08:31","00:30","c4","Xodim","ok","Sherzod Nazarov kirib keldi","face"],["a10","07:50","00:30","c3","Xodim","ok","Otabek Qodirov kirib keldi","face"]];
+ const ac=s.arcCam||"all", at=s.arcType||"all";
+ v.arcCam=ac; h.arcCam=(e)=>me.setState({arcCam:e.target.value});
+ v.arcCamOpts=[{id:"all",name:"Barcha kameralar"}].concat(s.cams.map(c=>({id:c.id,name:c.name})));
+ v.arcTypes=["all","Xodim","Avtomobil","Noma'lum shaxs","Shlagbaum","Aloqa"].map(o=>({label:o==="all"?"Barchasi":o,cls:at===o?"on":"",pick:()=>me.setState({arcType:o})}));
+ const arows=CL.filter(c=>(ac==="all"||c[3]===ac)&&(at==="all"||c[4]===at)).map(c=>({t:c[1],dur:c[2],camName:(s.cams.find(x=>x.id===c[3])||{}).name,type:c[4],k:c[5],txt:c[6],ic:ic[c[7]],st:"",
+  open:()=>{ me.setState({selCam:c[3],pos:me.mm(c[1])/14.4,live:false,playing:true,screen:"g-player"}); me.aud("Video","Arxiv ko'rildi: "+(s.cams.find(x=>x.id===c[3])||{}).name+" · "+c[1]); }}));
+ v.arcRows=arows; v.arcEmpty=arows.length===0;
+ }
+ // ---- delete confirm
+ v.confirmDel=!!s.confirmDel; const KN={emp:"xodim",group:"guruh",sched:"ish grafigi",cam:"kamera",user:"foydalanuvchi"};
+ v.delTxt=s.confirmDel?("«"+s.confirmDel.label+"» ("+KN[s.confirmDel.kind]+") o'chirilsinmi? Bu amalni ortga qaytarib bo'lmaydi va audit logga yoziladi."):"";
+ h.delCancel=()=>me.setState({confirmDel:null}); h.delGo=()=>me.doDel();
+ //MORE_VALS
+ if(!v.title) v.title=(this.TITLES&&this.TITLES[s.screen])||v.titles[s.screen]||"";
+ return v;
+}
+}
+</script>
+</body>
+</html>
