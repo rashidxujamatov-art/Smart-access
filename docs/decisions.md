@@ -38,3 +38,10 @@ Har bir qaror sanasi va kim qabul qilgani bilan.
 - **Shakl:** transactional outbox (`integration_outbox` jadvali) → fon ishchisi → PULSE HTTP API. Har hodisada `event_id` (UUID) — PULSE tomonida idempotent qabul.
 - **Moslash:** `external_links` (Smart Access shaxs ID ↔ PULSE ID).
 - **Hozircha:** PULSE o'zgartirilmaydi. Smart Access tomoni `PULSE_ENABLED=false` bilan quriladi; qabul qiluvchi endpoint PULSE'ga keyin qo'shiladi.
+
+## ADR-005 — Fayl saqlash: lokal disk
+
+- **Sana:** 2026-11-11. **Qaror:** texnik (CLAUDE.md 2.1 ruxsat beradi: "S3-mos (MinIO) yoki lokal disk").
+- **Sabab:** MinIO jamoat Docker obrazlarini tarqatishni to'xtatgan (Docker Hub — mavjud emas, quay.io — 401).
+- **Shakl:** `IFileStorage` interfeysi; amalga oshirish — `LocalDiskFileStorage` (Docker hajmi). Biometrik rasmlar AES-256-GCM bilan shifrlanib yoziladi (BR-PRIV-01).
+- **Keyin:** S3-mos ombor kerak bo'lsa, shu interfeysga yangi amalga oshirish qo'shiladi.

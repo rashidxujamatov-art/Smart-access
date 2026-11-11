@@ -41,13 +41,13 @@ Qarorlar: [decisions.md](decisions.md).
 [x] Git repozitoriy (main)
 [x] backend/: .NET 10 solution — Domain, Application, Infrastructure, WebApi, Tests (build: 0 xato)
 [x] frontend/: React + TypeScript + Vite (build: OK)
-[x] deploy/docker-compose.yml: PostgreSQL 16, Redis, MinIO, MediaMTX
+[x] deploy/docker-compose.yml: PostgreSQL 16, Redis, MediaMTX (fayllar — lokal disk, ADR-005)
 [x] .env.example (barcha maxfiy qiymatlar faqat .env da)
 [x] .github/workflows/ci.yml: backend (format + build + test), frontend (lint + build)
-[x] docs/decisions.md: ADR-001..004
-[ ] `docker compose up` tekshiruvi — Docker Desktop o'rnatildi, WSL2 yoqilishi va qayta yuklash kutilmoqda
+[x] docs/decisions.md: ADR-001..005
+[x] `docker compose up` tekshiruvi — postgres (healthy), redis, mediamtx ishlayapti
 [ ] Health endpoint + PostgreSQL ulanishi (EF Core) — 1-band boshida
-[ ] edge/, desktop/, mobile/ karkaslari — tegishli bandlarda (18, 19, 20)
+[x] edge/, desktop/, mobile/ — tegishli bandlarda quriladi (18, 19, 20); 0-band shart emas
 ```
 
 ## UI-SPEC tekshiruvi (UI-SPEC.md D-bo'lim)
