@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SmartAccess.Domain.Audit;
+using SmartAccess.Domain.Org;
 using SmartAccess.Domain.Settings;
 using SmartAccess.Domain.Tenants;
 using SmartAccess.Domain.Users;
@@ -13,6 +14,8 @@ public interface IAppDbContext
     DbSet<Session> Sessions { get; }
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<Setting> Settings { get; }
+    DbSet<Department> Departments { get; }
+    DbSet<Group> Groups { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

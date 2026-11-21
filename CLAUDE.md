@@ -648,6 +648,8 @@ E2E (Playwright): login (3 rol) → tegişli menyu; şlagbaum oçiş/yopiş/fix;
 12. 2FA ni yoqiş ekrani UI-SPEC'da yöq. Standart: kirişdan keyin oyna (QR + kod), API `POST /auth/2fa/setup`, `POST /auth/2fa/enable`.
 13. Birinçi kirişda parolni almaştiriş ekrani UI-SPEC'da yöq. Standart: kirişdan keyin oyna.
 14. "DEMO" belgisi joyi (UI-SPEC A.1 da yöq). Standart: top bar'da, server holatidan çapda.
+15. D11 da bölimni tahrirlaş/öçiriş joyi va yangi guruhning bölimi körsatilmagan. Standart: "Bölim qöşiş" bölimlar oynasini oçadi (qöşiş, nomini özgartiriş, öçiriş); yangi guruh filtrda tanlangan bölimga yaratiladi.
+16. Mas'ul şaxs bölim/guruh röyxatini öqiy oladimi. Standart: ha, faqat öqiş (davomat va hisobot filtrlari uçun); qorovul — yöq.
 
 **Qabul qilingan qarorlar (2026-11-11):** joylaştiriş gibrid — korxona içidagi server + alohida Hetzner server (ADR-002); kuzatiladiganlar — xodimlar VA talabalar (ADR-003); kiriş/çiqiş hodisalari PULSE'ga uzatiladi (ADR-004). Töliq: `docs/decisions.md`.
 

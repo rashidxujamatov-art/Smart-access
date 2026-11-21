@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartAccess.Application.Abstractions;
 using SmartAccess.Domain.Audit;
 using SmartAccess.Domain.Common;
+using SmartAccess.Domain.Org;
 using SmartAccess.Domain.Settings;
 using SmartAccess.Domain.Tenants;
 using SmartAccess.Domain.Users;
@@ -17,6 +18,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ITenant
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Setting> Settings => Set<Setting>();
+    public DbSet<Department> Departments => Set<Department>();
+    public DbSet<Group> Groups => Set<Group>();
 
     /// <summary>Filtr ifodasida ishlatiladi — har so'rovda joriy qiymat olinadi.</summary>
     private Guid? CurrentTenantId => tenant.TenantId;

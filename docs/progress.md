@@ -10,7 +10,7 @@ Qarorlar: [decisions.md](decisions.md).
 [x] 0. Monorepo, Docker Compose, .env.example, CI (lint + test)
 [~] 1. AUTH: login, 2FA, refresh, lockout, sessiyalar, logout, parolni almashtirish
 [~] 2. RBAC middleware + 3 rol menyulari
-[ ] 3. ORG: bo'limlar, guruhlar, o'chirish bloklari
+[~] 3. ORG: bo'limlar, guruhlar, o'chirish bloklari
 [ ] 4. EMP: CRUD, profil, Excel import/eksport, yuz enrollment + rozilik, soft delete
 [ ] 5. SCH: 5 tur, ierarxiya, istisnolar, validatsiya, preview, kalendar + jadval
 [ ] 6. ATT: hisoblash servisi (BR-ATT-01..20), tungi smena, qayta hisoblash, tuzatishlar, monitoring ekrani
@@ -83,6 +83,26 @@ Qarorlar: [decisions.md](decisions.md).
 [ ] Menyu bandlari ortidagi ekranlar — tegishli bandlarda (hozir faqat sarlavha)
 ```
 
+## 3-band tafsiloti — ORG
+
+```
+[x] Migratsiya Org: departments, groups (soft delete, deleted_at)
+[x] BR-ORG-01 Bo'lim → Guruh; guruh albatta bitta bo'limga tegishli; boshqa korxona bo'limi ko'rinmaydi
+[ ] BR-ORG-02 har guruhga bitta grafik (majburiy) — grafiklar jadvali 5-bandda (SCH)
+[ ] BR-ORG-03 guruh grafigi o'zgarsa xodimlarga avtomatik (effective_from) — 5-band
+[x] BR-ORG-04 ichida guruh bor bo'limni o'chirish taqiqlanadi (409 department_has_groups)
+[ ] BR-ORG-04 ichida xodim bor guruhni o'chirish taqiqi — xodimlar jadvali 4-bandda (EMP)
+[x] BR-ORG-05 nom unikal (bo'lim — korxonada, guruh — bo'lim ichida), katta-kichik harfsiz; o'chirilgan nom qayta ishlatiladi
+[x] API: GET/POST /departments, PATCH/DELETE /departments/:id, GET/POST /groups, PATCH/DELETE /groups/:id
+[ ] API: POST /groups/:id/schedule — 5-band
+[x] Ruxsat: CRUD — admin; o'qish — admin va mas'ul shaxs (davomat/hisobot filtrlari); qorovul — 403 + audit
+[x] Audit: yaratish/tahrirlash/o'chirish (eski va yangi qiymat), rad etilgan o'chirish ham
+[x] UI: D11 — toolbar, guruh kartalari, o'chirish tasdig'i, bo'limlar oynasi; yuklanish/bo'sh/xato holatlari
+[ ] UI: D11 kartadagi "N xodim" + avatarlar — 4-band; "Guruh grafigi" select — 5-band
+[x] Testlar: 12 ta (OrgTests) — yashil
+[x] Brauzerda tekshirildi: bo'lim yaratish, takroriy nom, bo'limsiz guruh, guruh yaratish, guruhi bor bo'limni o'chirish
+```
+
 ## UI-SPEC tekshiruvi (UI-SPEC.md D-bo'lim)
 
 Har ekran uchun: element bor · joyi to'g'ri · vazifasi ishlaydi · rol cheklovi to'g'ri.
@@ -117,3 +137,16 @@ Ekranlar qurilganda shu yerga jadval qo'shiladi.
 | Server holati badge | [x] | [x] | [x] (/health, 30 s) |
 | Dark/Light tugmasi | [x] | [x] | [x] (saqlanadi) |
 | Oflayn banner | [ ] | — | 18-band (OFF) |
+
+### D11 — Guruhlar va bo'limlar
+
+| Element | Bor | Joyi | Vazifasi | Rol |
+|---|---|---|---|---|
+| Ierarxiya izohi (toolbar chapida) | [x] | [x] | — | admin |
+| Bo'lim filtri / Bo'lim qo'shish | [x] | [x] | [x] (filtr; bo'limlar CRUD oynasi) | [x] |
+| "Yangi guruh nomi" input | [x] | [x] | [x] | [x] |
+| Guruh yaratish (asosiy, eng o'ngda) | [x] | [x] | [x] (tanlangan bo'limga) | [x] |
+| Guruh kartalari gridi | [x] | [x] | — | — |
+| Karta: nom, bo'lim badge, O'chirish | [x] | [x] | [x] (tasdiq oynasi) | [x] |
+| "N xodim" + avatarlar | [ ] | — | 4-band | — |
+| "Guruh grafigi" select | [ ] | — | 5-band | — |

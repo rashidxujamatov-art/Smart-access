@@ -74,6 +74,8 @@ CLAUDE.md 13-bo'lim. Javob berilganlari — [docs/decisions.md](docs/decisions.m
 | 12 | 2FA ni yoqish ekrani UI-SPEC'da yo'q | Ochiq. Standart: kirishdan keyin oyna (QR + kod); API `POST /auth/2fa/setup`, `/auth/2fa/enable` |
 | 13 | Birinchi kirishda parolni almashtirish ekrani UI-SPEC'da yo'q | Ochiq. Standart: kirishdan keyin oyna |
 | 14 | "DEMO" belgisi top bar'da (UI-SPEC A.1 da yo'q, CLAUDE.md 0.4 talab qiladi) | Standart: top bar'da, server holatidan chapda, faqat DEMO_MODE |
+| 15 | D11 da bo'limni tahrirlash/o'chirish joyi va yangi guruh bo'limi ko'rsatilmagan | Standart: "Bo'lim qo'shish" bo'limlar oynasini ochadi (qo'shish, nomini o'zgartirish, o'chirish); yangi guruh filtrda tanlangan bo'limga yaratiladi |
+| 16 | Mas'ul shaxs bo'lim/guruh ro'yxatini o'qiy oladimi (3-bo'limda faqat CRUD yozilgan) | Standart: ha, faqat o'qish — davomat va hisobot filtrlari uchun; qorovul — yo'q |
 
 ## Huquqiy eslatma (BR-PRIV-03)
 

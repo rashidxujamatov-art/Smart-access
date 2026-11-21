@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SmartAccess.Application.Audit;
 using SmartAccess.Application.Features.Auth;
+using SmartAccess.Application.Features.Org;
 using SmartAccess.Application.Settings;
 
 namespace SmartAccess.Application;
@@ -13,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<SettingsReader>();
         services.AddScoped<AuthService>();
         services.AddScoped<SessionService>();
+        services.AddScoped<OrgService>();
         return services;
     }
 }

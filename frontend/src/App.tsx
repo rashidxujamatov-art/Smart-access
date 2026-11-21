@@ -4,6 +4,13 @@ import { homePath, MENUS } from './app/menu';
 import { AuthProvider, useAuth } from './lib/auth';
 import { useTheme } from './lib/theme';
 import { LoginPage } from './pages/LoginPage';
+import { GroupsPage } from './pages/admin/GroupsPage';
+import { ToastProvider } from './ui/Toast';
+
+/** Qurilgan ekranlar (manzil → komponent). Qolgan menyu bandlari — tegishli bandlarda (docs/progress.md). */
+const SCREENS: Record<string, React.ReactNode> = {
+  '/admin/groups': <GroupsPage />,
+};
 
 /** Barcha rollarning menyu manzillari (takrorlanmasdan). Ekranlar tegishli bandlarda qo'shiladi (docs/progress.md). */
 const ALL_PATHS = [...new Set(Object.values(MENUS).flat().map((m) => m.path))];
@@ -24,15 +31,17 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ThemeRoot>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route element={<AppShell />}>
-              {ALL_PATHS.map((p) => (
-                <Route key={p} path={p} element={null} />
-              ))}
-            </Route>
-            <Route path="*" element={<RootRedirect />} />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route element={<AppShell />}>
+                {ALL_PATHS.map((p) => (
+                  <Route key={p} path={p} element={SCREENS[p] ?? null} />
+                ))}
+              </Route>
+              <Route path="*" element={<RootRedirect />} />
+            </Routes>
+          </ToastProvider>
         </ThemeRoot>
       </BrowserRouter>
     </AuthProvider>

@@ -19,6 +19,9 @@ public sealed class AppException(int status, string code, IReadOnlyDictionary<st
     public static AppException Forbidden() => new(403, ErrorCodes.Forbidden);
     public static AppException NotFound() => new(404, ErrorCodes.NotFound);
 
+    /// <summary>Bog'liq ma'lumot bor — amal bloklanadi va sababi ko'rsatiladi (CLAUDE.md 9-bo'lim).</summary>
+    public static AppException Conflict(string code, object? details = null) => new(409, code, details: details);
+
     public static AppException Validation(string field, string code) =>
         new(400, ErrorCodes.ValidationError, new Dictionary<string, string> { [field] = code });
 }
@@ -42,4 +45,11 @@ public static class ErrorCodes
     public const string PasswordSameAsOld = "password_same_as_old";
     public const string WrongPassword = "wrong_password";
     public const string NoPending2fa = "no_pending_2fa";
+    public const string TooLong = "too_long";
+    public const string NameTaken = "name_taken";
+    public const string DepartmentNotFound = "department_not_found";
+
+    // 409 — bog'liq ma'lumot tufayli bloklangan amallar
+    public const string DepartmentHasGroups = "department_has_groups";
+    public const string GroupHasEmployees = "group_has_employees";
 }
