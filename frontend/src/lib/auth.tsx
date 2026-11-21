@@ -85,8 +85,3 @@ export function useAuth(): AuthState {
   if (!ctx) throw new Error('useAuth AuthProvider ichida ishlatilishi kerak');
   return ctx;
 }
-
-/** Cheklangan sessiya: parol almashtirilmagan yoki 2FA sozlanmagan — ilovaga kirish yo'q. */
-export function isRestricted(user: UserInfo | null): boolean {
-  return !!user && (user.mustChangePassword || user.mustSetup2fa);
-}

@@ -28,3 +28,9 @@ data/
 !.vscode/extensions.json
 Thumbs.db
 .DS_Store
+
+# Frontend demo bayrog'i — maxfiy emas
+!frontend/.env.development
+
+# Brauzer sinovi skrinshotlari
+.playwright-mcp/

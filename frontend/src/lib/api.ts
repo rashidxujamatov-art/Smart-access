@@ -31,6 +31,11 @@ export interface UserInfo {
   mustSetup2fa: boolean;
 }
 
+/** Cheklangan sessiya: parol almashtirilmagan yoki 2FA sozlanmagan — ilovaga kirish yo'q. */
+export function isRestricted(user: UserInfo | null): boolean {
+  return !!user && (user.mustChangePassword || user.mustSetup2fa);
+}
+
 export interface AuthResponse {
   stage: 'ok' | '2fa';
   accessToken: string | null;

@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { AppShell } from './app/AppShell';
+import { homePath, MENUS } from './app/menu';
+import { AuthProvider, useAuth } from './lib/auth';
+import { useTheme } from './lib/theme';
+import { LoginPage } from './pages/LoginPage';
 
-function App() {
-  const [count, setCount] = useState(0)
+/** Barcha rollarning menyu manzillari (takrorlanmasdan). Ekranlar tegishli bandlarda qo'shiladi (docs/progress.md). */
+const ALL_PATHS = [...new Set(Object.values(MENUS).flat().map((m) => m.path))];
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function RootRedirect() {
+  const { status, user } = useAuth();
+  if (status === 'loading') return null;
+  return <Navigate to={user ? homePath(user.role) : '/login'} replace />;
 }
 
-export default App
+function ThemeRoot({ children }: { children: React.ReactNode }) {
+  useTheme();
+  return <div className="root">{children}</div>;
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <ThemeRoot>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<AppShell />}>
+              {ALL_PATHS.map((p) => (
+                <Route key={p} path={p} element={null} />
+              ))}
+            </Route>
+            <Route path="*" element={<RootRedirect />} />
+          </Routes>
+        </ThemeRoot>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}

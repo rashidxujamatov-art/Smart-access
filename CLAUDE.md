@@ -645,6 +645,9 @@ E2E (Playwright): login (3 rol) → tegişli menyu; şlagbaum oçiş/yopiş/fix;
 9. Talabalar davomati qanday hisoblanadi? Standart: Smart Access faqat kiriş/çiqişni qayd etib PULSE'ga uzatadi, davomatni PULSE hisoblaydi (ADR-003).
 10. Talabalar röyxati manbai. Standart: Excel import, keyin PULSE'dan sinxronlaş.
 11. Voyaga yetmagan talabalar biometrik roziligi. Standart: rozilik majburiy, kim bergani qayd etiladi.
+12. 2FA ni yoqiş ekrani UI-SPEC'da yöq. Standart: kirişdan keyin oyna (QR + kod), API `POST /auth/2fa/setup`, `POST /auth/2fa/enable`.
+13. Birinçi kirişda parolni almaştiriş ekrani UI-SPEC'da yöq. Standart: kirişdan keyin oyna.
+14. "DEMO" belgisi joyi (UI-SPEC A.1 da yöq). Standart: top bar'da, server holatidan çapda.
 
 **Qabul qilingan qarorlar (2026-11-11):** joylaştiriş gibrid — korxona içidagi server + alohida Hetzner server (ADR-002); kuzatiladiganlar — xodimlar VA talabalar (ADR-003); kiriş/çiqiş hodisalari PULSE'ga uzatiladi (ADR-004). Töliq: `docs/decisions.md`.
 
